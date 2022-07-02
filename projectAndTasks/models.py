@@ -1,3 +1,4 @@
+from pyexpat import model
 from turtle import title
 from django.db import models
 from requests import delete
@@ -136,22 +137,13 @@ class TaskHierarchy (models.Model):
         on_delete=models.CASCADE
     )
 
-    child_task_id = models.ForeignKey(
+    sub_task_id = models.ForeignKey(
         Task,
         null=False,
         on_delete=models.CASCADE
     )
 
 
-class Dependency (models.Model):
-    id = models.AutoField(
-        primary_key=True 
-    )  
-
-    dependent_on_task_id = models.ForeignKey(
-        Task,
-        
-    )
 
 
 
