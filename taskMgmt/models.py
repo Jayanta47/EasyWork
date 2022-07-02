@@ -1,5 +1,6 @@
 from django.db import models
-from ..projectAndTasks.models import Task
+from projectAndTasks.models import Task
+from userMgmt.models import User
 
 # Create your models here.
 
@@ -10,10 +11,43 @@ class Dependency (models.Model):
 
     dependent_on_task = models.ForeignKey(
         Task,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="depending_task"
     )
 
     parent_task = models.ForeignKey(
         Task, 
+        on_delete=models.CASCADE,
+        related_name="parent_of_dependent_task" 
+    )
+
+class User_Task (models.Model):
+    id = models.AutoField(
+        primary_key=True 
+    ) 
+
+    user_id = models.ForeignKey(
+        User,
         on_delete=models.CASCADE
     )
+
+    task_id = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE
+    )
+
+    assign_date = models.DateField(
+        default=None, null=True  
+    )
+
+    duration = models.IntegerField(
+        default=None,
+        null=True 
+    )
+
+
+class Milestones(models.Model):
+    id = models.AutoField(
+        primary_key=True 
+    ) 
+

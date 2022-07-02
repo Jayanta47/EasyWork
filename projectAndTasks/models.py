@@ -1,9 +1,6 @@
-from pyexpat import model
-from turtle import title
 from django.db import models
-from requests import delete
-from ..userMgmt.models import Designation, User
-from ..costEstimation.models import FuncCategory
+from userMgmt.models import Designation, User
+from costEstimation.models import FuncCategory
 # Create your models here.
 
 
@@ -28,15 +25,18 @@ class Project(models.Model):
     )
 
     allocated_time = models.IntegerField(
-
+        default = None, null=True 
     ) # in number of days 
 
     budget = models.IntegerField(
-
+        default=1000,
+        null = True
     )
 
     dev_type = models.CharField(
-        
+        max_length=100,
+        default = None,
+        null = True 
     )
 
 
@@ -86,6 +86,7 @@ class Task(models.Model):
     )
 
     project_id = models.ForeignKey(
+        Project,
         on_delete=models.CASCADE
     )
 
@@ -134,13 +135,15 @@ class TaskHierarchy (models.Model):
 
     parent_task_id = models.ForeignKey(
         Task,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name = "parent_task"
     )
 
     sub_task_id = models.ForeignKey(
         Task,
         null=False,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name = "sub_task"
     )
 
 
