@@ -5,7 +5,7 @@ from django.db import models
 
 # Roles and salary
 
-class Roles(models.Model):
+class Designation(models.Model):
     id = models.AutoField(
         primary_key=True
     )
@@ -18,7 +18,7 @@ class Roles(models.Model):
     )
 
     salary = models.IntegerField(
-        default = 1000,
+        default = 0,
         null=False
     )
 
@@ -27,7 +27,7 @@ class Roles(models.Model):
         null=False
     )
 
-    valid_till = models.DateField(
+    salary_valid_till = models.DateField(
         default=None,
         blank=True,
         null=True
@@ -99,7 +99,7 @@ class User(models.Model):
     )
 
     job = models.ForeignKey(
-        Roles,
+        Designation,
         default=None,
         on_delete=models.SET_NULL,
         null=True
