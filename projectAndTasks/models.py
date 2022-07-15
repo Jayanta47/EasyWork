@@ -6,7 +6,7 @@ from costEstimation.models import FuncCategory
 
 class Project(models.Model):
 
-    id = models.AutoField(
+    id = models.AutoField( 
         primary_key=True 
     )
 
@@ -41,7 +41,7 @@ class Project(models.Model):
 
 
 class User_Project_Map(models.Model):
-    id = models.AutoField(
+    id = models.AutoField( 
         primary_key=True
     )
 
@@ -80,7 +80,7 @@ class Task(models.Model):
         ("P", "postponed"),
         ("U", "not started"),
     ]
-
+    
     id = models.AutoField(
         primary_key=True 
     )
