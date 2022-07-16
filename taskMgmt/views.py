@@ -22,3 +22,18 @@ def getAllTasksForProject(request):
     dependency_list = getPredecessorTaskList(task_id_list=task_id_list)
 
     return Response({"task_list": task_list, "dependency_list": dependency_list}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def getSubTasks(request):
+    task_id = request.data['task_id']
+    subtask_list = getSubTaskList(task_id)
+    return Response({"subtask_list": subtask_list, "success": True}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def getTaskDetails(request):
+    task_id = request.data['task_id']
+    print(task_id)
+    task_info = getTaskDetailsDict(task_id)
+    return Response({"success": True, "task_info": task_info}, status=status.HTTP_200_OK)
