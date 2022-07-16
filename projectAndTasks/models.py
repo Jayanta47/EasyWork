@@ -75,10 +75,10 @@ class User_Project_Map(models.Model):
 class Task(models.Model):
 
     STATUS_LIST = [
-        ("C", "completed"),
-        ("O", "ongoing"),
-        ("P", "postponed"),
-        ("U", "not started"),
+        ("Completed", "completed"),
+        ("Ongoing", "ongoing"),
+        ("Postponed", "postponed"),
+        ("Not Started", "not started"),
     ]
     
     id = models.AutoField(
@@ -116,7 +116,7 @@ class Task(models.Model):
     )
 
     status = models.CharField(
-        max_length=2,
+        max_length=15,
         choices=STATUS_LIST 
     )
 
