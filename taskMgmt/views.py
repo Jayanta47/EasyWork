@@ -21,7 +21,8 @@ def getAllTasksForProject(request):
         task_id_list.append(task_id)
     dependency_list = getPredecessorTaskList(task_id_list=task_id_list)
 
-    return Response({"task_list": task_list, "dependency_list": dependency_list}, status=status.HTTP_200_OK)
+    return Response({"task_list": task_list, "dependency_list": dependency_list},
+                    status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -37,3 +38,10 @@ def getTaskDetails(request):
     print(task_id)
     task_info = getTaskDetailsDict(task_id)
     return Response({"success": True, "task_info": task_info}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def getOnlyTasksForProject(request):
+    project_id = request.data['project_id']
+    task_list = getTasksList(project_id=project_id)
+    return Response({"task_list": task_list}, status=status.HTTP_200_OK)
