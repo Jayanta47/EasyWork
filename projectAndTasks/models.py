@@ -96,6 +96,12 @@ class Task(models.Model):
         null=True,
     )
 
+    description = models.CharField(
+        max_length=600,
+        default=None,
+        null=True
+    )
+
     creation_time = models.DateTimeField(
         auto_now_add=True
     )
