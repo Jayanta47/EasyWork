@@ -68,7 +68,7 @@ class TaskHierarchyHandler(APIView):
         serializer = TaskHierarchySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": True}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, project_id, *args, **kwargs):
