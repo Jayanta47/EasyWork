@@ -10,3 +10,50 @@ from django.test import TestCase
 
 # 127.0.0.1:8000/taskmgmt/gettaskdetails/
 
+
+# adding a project to the db 
+
+# url: 127.0.0.1:8000/project/addproject/
+
+# data:
+# {
+#     "title":"Project2",
+#     "description": "description for the second project",
+#     "allocated_time": 50,
+#     "budget": 2000,
+#     "dev_type": "Not specified"
+# }
+
+# adding a task to the db 
+
+# url: 127.0.0.1:8000/project/addtask/
+
+# data:
+# {
+#     "project_id":5,
+#     "title": "Task1",
+#     "description": "Task 1 description for project2",
+#     "start_time": "2022-07-18",
+#     "end_time": "2022-08-18",
+#     "status": "Not Started" #optional, "Not Started" by default
+#     "slack_time": 2, # optional, default 0
+#     "category_id": 1 #optional, default null
+# }
+
+# adding a comment
+
+# url: 127.0.0.1:8000/project/addcomments/
+
+# data:
+# {
+#     "task": 3,
+#     "comment": "You can delay this for 2 days"
+# }
+
+# getting a comment 
+
+# url: 127.0.0.1:8000/project/getcomments/
+
+# {
+#     "task_id": 3
+# }

@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 
-from projectAndTasks.models import Project, User_Project_Map, Task, TaskHierarchy
+from projectAndTasks.models import Project, TaskComments, User_Project_Map, Task, TaskHierarchy
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,11 +32,12 @@ class User_Project_Map_Serializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Task,
+        model = Task
         fields = [
             'id', 
             'project_id', 
             'title', 
+            'description',
             'creation_time', 
             'start_time', 
             'end_time', 
@@ -53,4 +54,15 @@ class TaskHierarchySerializer(serializers.ModelSerializer):
             'id', 
             'parent_task_id', 
             'sub_task_id', 
+        ]
+
+
+class TaskCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TaskComments
+        fields = [ 
+            'id', 
+            'task',
+            'comment'
         ]

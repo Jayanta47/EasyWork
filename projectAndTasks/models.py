@@ -123,7 +123,8 @@ class Task(models.Model):
 
     status = models.CharField(
         max_length=15,
-        choices=STATUS_LIST 
+        choices=STATUS_LIST ,
+        default="Not Started"
     )
 
     category_id = models.ForeignKey(
@@ -150,6 +151,21 @@ class TaskHierarchy (models.Model):
         null=False,
         on_delete=models.CASCADE,
         related_name = "sub_task"
+    )
+
+class TaskComments (models.Model):
+    id = models.AutoField(
+        primary_key = True 
+    )
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE
+    )
+
+    comment = models.CharField(
+        max_length=1000,
+        null=False,
     )
 
 

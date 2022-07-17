@@ -139,3 +139,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 #   'http://localhost:8000',
 #   'http://localhost:3000',
 # )
+
+TIME_ZONE = 'Asia/Dacca'

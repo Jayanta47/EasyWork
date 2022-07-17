@@ -1,6 +1,9 @@
+from datetime import datetime, timedelta
 from projectAndTasks.models import Task, TaskHierarchy
 from projectAndTasks.serializers import TaskSerializer
 from taskMgmt.models import Dependency
+
+from django.utils import timezone
 
 
 def getTasksList(project_id):
@@ -74,3 +77,13 @@ def getTaskDetailsDict(task_id):
         'status': task_info['status']
     }
     return task_dict
+
+def getRemainingTime(start_date, allocated_time):
+    if (allocated_time is None):
+        return 0
+    # print(type(start_date))
+    end_date = start_date+timedelta(days=allocated_time)
+    remaining_days = end_date - datetime.now().date()
+    # print(end_date, remaining_days)
+    return remaining_days.days
+    # print(start_date, allocated_time)
