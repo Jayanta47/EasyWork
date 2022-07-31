@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
-from projectAndTasks.models import Task, TaskHierarchy
+from unicodedata import category
+from projectAndTasks.models import Task, TaskHierarchy, User_Project_Map
 from projectAndTasks.serializers import TaskSerializer
 from taskMgmt.models import Dependency
+from userMgmt.models import User, Designation
 
 from django.utils import timezone
 
@@ -87,3 +89,24 @@ def getRemainingTime(start_date, allocated_time):
     # print(end_date, remaining_days)
     return remaining_days.days
     # print(start_date, allocated_time)
+
+
+def getAllTasksOfCategory(cat_id):
+    tasks = Task.objects.filter(category_id=cat_id).values()[0]
+    if tasks is not None:
+        project_id = tasks["project_id_id"]
+    print("project_id", project_id)
+    all_maps = User_Project_Map.objects.filter(project_id=project_id).values()
+    all_categories = {}
+
+    for m in all_maps:
+        user = User.objects.filter(id = m["user_id_id"]).values()[0]
+        job_id = user['job_id']
+        job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
+        if str(job) in all_categories:
+            all_categories[str(job)] = all_categories[str(job)] + 1
+        else:
+            all_categories[str(job)] = 1
+    # print(all_categories)
+
+    return all_categories
