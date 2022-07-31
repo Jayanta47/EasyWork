@@ -56,3 +56,8 @@ def getProjects(request):
         project['remaining_time'] = getRemainingTime(project['start_date'], project['allocated_time'])
         project_list.append(project)
     return Response({"project_list": project_list, "success": True}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getTest(request, param1, param2):
+    print(param1, param2)
+    return Response({"success": True}, status=status.HTTP_200_OK)

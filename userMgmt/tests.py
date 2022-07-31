@@ -57,3 +57,13 @@ from django.test import TestCase
 # {
 #     "task_id": 3
 # }
+
+# adding hierarchy 
+# url : 127.0.0.1:8000/project/addtaskparent/
+
+# data:
+
+# {
+#     "parent_task_id": 1,
+#     "sub_task_id": 2
+# }

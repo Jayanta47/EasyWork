@@ -8,4 +8,5 @@ urlpatterns = [
     path('gettaskslist/', views.getOnlyTasksForProject ), # title, priority, due date, status
     path('getsubtasks/', views.getSubTasks ),
     path('gettaskdetails/', views.getTaskDetails ),
+    path('getTest/<int:param1>/<int:param2>/', views.getTest ),
 ]
