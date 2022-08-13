@@ -12,39 +12,39 @@ from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updat
 from taskMgmt.utils import getCategoriesUnderProject
 from .serializers import FuncCategorySerializer
 
+
 @api_view(["GET"])
 def getCategoryData(request, cat_id):
-    # print(cat_id)
-    category = FuncCategory.objects.filter(id=cat_id).values()[0]
-    # print(category)
-    all_members = getAllMembersOfCategory(cat_id=cat_id)
-    d = {
-        "category_name": category['title'],
-        "expected_time": category['expected_time'],
-        "allocated_budget": category['allocated_budget'],
-        "man_hour_per_week": category['man_hour_per_week'],
-        "allocated_members": all_members,
-    }
+    category = FuncCategory.objects.filter(id=cat_id).values()
+    if len(category) > 0:
 
-    # print("all",all_tasks)
-    # employee_list = []
-    # for task in all_tasks:
+        all_members = getAllMembersOfCategory(cat_id=cat_id)
+        d = {
+            "category_name": category['title'],
+            "expected_time": category['expected_time'],
+            "allocated_budget": category['allocated_budget'],
+            "man_hour_per_week": category['man_hour_per_week'],
+            "allocated_members": all_members,
+        }
 
-    return Response({"success": True, "data": d},
-                    status=status.HTTP_200_OK)
+        return Response({"success": True, "data": d},
+                        status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False},
+                        status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(["GET"])
 def getAllCategorySummary(request, project_id):
     d = []
-    # all_categories = FuncCategory.objects.all().values()
 
     all_categories = getCategoriesUnderProject(project_id)
+    # print(all_categories)
 
     for category in all_categories:
         # print(category)
-        members = getAllMembersOfCategory(project_id=project_id)
-        people_assigned = len(members)
+        members = getAllMembersOfCategory(cat_id=category['id'])
+        # people_assigned = len(members)
         all_tasks = getAllTasksOfCategory(cat_id=category['id'])
         d_ = {
             "id": category['id'],
@@ -52,7 +52,7 @@ def getAllCategorySummary(request, project_id):
             "expected_time": category['expected_time'],
             "allocated_budget": category['allocated_budget'],
             "man_hour_per_week": category['man_hour_per_week'],
-            "allocated_members": people_assigned,
+            "allocated_members": len(members),
             "total_task": len(all_tasks)
         }
         d.append(d_.copy())
@@ -61,14 +61,14 @@ def getAllCategorySummary(request, project_id):
 
 
 @api_view(["GET"])
-def getAllCategoryWithTaskName(request):
+def getAllCategoryWithTaskName(request, project_id):
     data = []
-    all_categories = FuncCategory.objects.all().values()
+    all_categories = getCategoriesUnderProject(project_id)
 
     for category in all_categories:
         print(category)
         all_tasks = getAllTasksOfCategory(cat_id=category['id'])
-        print("tasks",all_tasks)
+        print("tasks", all_tasks)
 
         category_data = {
             "id": category["id"],
@@ -82,6 +82,7 @@ def getAllCategoryWithTaskName(request):
     return Response({"success": True, "data": data},
                     status=status.HTTP_200_OK)
 
+
 @api_view(["POST"])
 def setDecomposition(request):
     data = request.data["data"]
@@ -90,11 +91,11 @@ def setDecomposition(request):
         tasks = category_data["tasks"]
         for task in tasks:
             updateTaskFuncCategory(task["id"], category_data["id"])
-        
+
     deletion_list = request.data["toDelete"]
 
     for category_id in deletion_list:
-        FuncCategory.objects.filter(id = category_id).delete()
+        FuncCategory.objects.filter(id=category_id).delete()
 
     return Response({"success": True}, status=status.HTTP_200_OK)
 
@@ -105,19 +106,20 @@ def editCategories(request):
     category_create_list = request.data['toCreate']
     new_category_list = []
     for new_category_title in category_create_list:
-        funcSerializer = FuncCategorySerializer(data={"title":new_category_title})
+        funcSerializer = FuncCategorySerializer(
+            data={"title": new_category_title})
         if funcSerializer.is_valid():
             funcSerializer.save()
-            
+
             new_category_list.append(funcSerializer.data)
-    
+
     category_modify_list = request.data['toModify']
-    
+
     for category_data in category_modify_list:
-        funcData = FuncCategory.objects.get(id = category_data['id'])
+        funcData = FuncCategory.objects.get(id=category_data['id'])
         print(funcData)
         funcSerializer = FuncCategorySerializer(funcData, data=category_data)
         if funcSerializer.is_valid():
             funcSerializer.save()
-    
+
     return Response({"success": True}, status=status.HTTP_200_OK)

@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 from unicodedata import category
+from costEstimation.models import FuncCategory
 from projectAndTasks.models import Task, TaskHierarchy, User_Project_Map, Project_Category_Map
 from projectAndTasks.serializers import TaskSerializer
-from taskMgmt.models import Dependency
+from taskMgmt.models import Dependency, User_Task_Map
 from userMgmt.models import User, Designation
 
 from django.utils import timezone
@@ -94,23 +95,49 @@ def getRemainingTime(start_date, allocated_time):
 # error in implementation
 
 
-def getAllMembersOfCategory(cat_id):
-    tasks = Task.objects.filter(category_id=cat_id).values()[0]
-    if tasks is not None:
-        project_id = tasks["project_id_id"]
-    print("project_id", project_id)
-    all_maps = User_Project_Map.objects.filter(project_id=project_id).values()
-    all_categories = {}
+# def getAllMembersOfCategory(cat_id):
+#     tasks = Task.objects.filter(category_id=cat_id).values()[0]
+#     if tasks is not None:
+#         project_id = tasks["project_id_id"]
+#     print("project_id", project_id)
+#     all_maps = User_Project_Map.objects.filter(project_id=project_id).values()
+#     all_categories = {}
 
-    for m in all_maps:
-        user = User.objects.filter(id=m["user_id_id"]).values()[0]
-        job_id = user['job_id']
-        job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
-        if str(job) in all_categories:
-            all_categories[str(job)] = all_categories[str(job)] + 1
-        else:
-            all_categories[str(job)] = 1
-    # print(all_categories)
+#     for m in all_maps:
+#         user = User.objects.filter(id=m["user_id_id"]).values()[0]
+#         job_id = user['job_id']
+#         job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
+#         if str(job) in all_categories:
+#             all_categories[str(job)] = all_categories[str(job)] + 1
+#         else:
+#             all_categories[str(job)] = 1
+#     # print(all_categories)
+
+#     final_data = []
+#     for key, value in all_categories.items():
+#         d = {
+#             "post": key,
+#             "count": value 
+#         }
+#         final_data.append(d)
+
+#     return final_data
+
+
+def getAllMembersOfCategory(cat_id):
+    tasks = Task.objects.filter(category_id=cat_id).values()
+    all_categories = {}
+    for task in tasks:
+        all_user_maps = User_Task_Map.objects.filter(task_id=task['id']).values()
+
+        for m in all_user_maps:
+            user = User.objects.filter(id=m["user_id_id"]).values()[0]
+            job_id = user['job_id']
+            job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
+            if str(job) in all_categories:
+                all_categories[str(job)] = all_categories[str(job)] + 1
+            else:
+                all_categories[str(job)] = 1
 
     final_data = []
     for key, value in all_categories.items():
@@ -121,7 +148,6 @@ def getAllMembersOfCategory(cat_id):
         final_data.append(d)
 
     return final_data
-
 
 def getAllTasksOfCategory(cat_id):
     tasks = Task.objects.filter(category_id=cat_id).values()
@@ -141,6 +167,9 @@ def updateTaskFuncCategory(task_id, new_cat_id):
 
 
 def getCategoriesUnderProject(project_id):
-    all_category_ids = Project_Category_Map.objects.filter(project=project_id).values()
-    
-    return all_category_ids
+    all_project_category_map = Project_Category_Map.objects.filter(project=project_id).values()
+    all_categories = []
+    for project_category_map in all_project_category_map:
+        category = FuncCategory.objects.filter(id=project_category_map['category_id']).values()[0]
+        all_categories.append(category)
+    return all_categories
