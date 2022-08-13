@@ -39,16 +39,19 @@ def getAllCategorySummary(request):
 
     for category in all_categories:
         # print(category)
-        all_tasks = getAllMembersOfCategory(cat_id=category['id'])
+        members = getAllMembersOfCategory(cat_id=category['id'])
         people_assigned = 0
-        for x in all_tasks:
+        for x in members:
             people_assigned = people_assigned+1
+        all_tasks = getAllTasksOfCategory(cat_id=category['id'])
         d_ = {
+            "id": category['id'],
             "category_name": category['title'],
             "expected_time": category['expected_time'],
             "allocated_budget": category['allocated_budget'],
             "man_hour_per_week": category['man_hour_per_week'],
-            "allocated_members": people_assigned
+            "allocated_members": people_assigned,
+            "total_task": len(all_tasks)
         }
         d.append(d_.copy())
     return Response({"success": True, "data": d},
