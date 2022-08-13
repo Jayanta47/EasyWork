@@ -1,3 +1,4 @@
+from unicodedata import decomposition
 from django.test import TestCase
 
 # Create your tests here.
@@ -66,4 +67,20 @@ from django.test import TestCase
 # {
 #     "parent_task_id": 1,
 #     "sub_task_id": 2
+# }
+
+# editing decomposition
+
+# url: 127.0.0.1:8000/costEstm/editCategories/
+
+# data:
+
+# {
+#     "toCreate": ["new func 3", "new func 4"],
+#     "toModify": [
+#         {
+#             "id": 1,
+#             "title": "modified 1"
+#         }
+#     ] 
 # }

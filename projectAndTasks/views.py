@@ -114,3 +114,8 @@ def deleteTask(request, task_id):
         return Response({"success": True}, status=status.HTTP_200_OK)
     except ObjectDoesNotExist:
         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
+
+@api_view(["POST"])
+def updateTask(request):
+    data = request.data
+    

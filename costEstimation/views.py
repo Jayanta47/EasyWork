@@ -5,10 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
-from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory
+from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
 
+from .serializers import FuncCategorySerializer
 
 @api_view(["GET"])
 def getCategoryData(request, cat_id):
@@ -79,3 +81,41 @@ def getAllCategoryWithTaskName(request):
 
     return Response({"success": True, "data": data},
                     status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def setDecomposition(request):
+    data = request.data["data"]
+
+    for category_data in data:
+        tasks = category_data["tasks"]
+        for task in tasks:
+            updateTaskFuncCategory(task["id"], category_data["id"])
+        
+    deletion_list = request.data["toDelete"]
+
+    for category_id in deletion_list:
+        FuncCategory.objects.filter(id = category_id).delete()
+
+    return Response({"success": True}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def editCategories(request):
+    category_create_list = request.data['toCreate']
+    new_category_list = []
+    for new_category_title in category_create_list:
+        funcSerializer = FuncCategorySerializer(data={"title":new_category_title})
+        if funcSerializer.is_valid():
+            funcSerializer.save()
+            new_category_list.append(funcSerializer.data)
+    
+    category_modify_list = request.data['toModify']
+    
+    for category_data in category_modify_list:
+        funcData = FuncCategory.objects.get(id = category_data['id'])
+        print(funcData)
+        funcSerializer = FuncCategorySerializer(funcData, data=category_data)
+        if funcSerializer.is_valid():
+            funcSerializer.save()
+    
+    return Response({"success": True}, status=status.HTTP_200_OK)

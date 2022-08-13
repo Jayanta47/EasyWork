@@ -134,3 +134,7 @@ def getAllTasksOfCategory(cat_id):
         }
         task_list.append(d)
     return task_list
+
+def updateTaskFuncCategory(task_id, new_cat_id):
+    task = Task.objects.filter(id=task_id)
+    task.update(category_id=new_cat_id)
