@@ -80,6 +80,7 @@ def getTaskDetailsDict(task_id):
     }
     return task_dict
 
+
 def getRemainingTime(start_date, allocated_time):
     if (allocated_time is None):
         return 0
@@ -90,8 +91,10 @@ def getRemainingTime(start_date, allocated_time):
     return remaining_days.days
     # print(start_date, allocated_time)
 
+# error in implementation
 
-def getAllTasksOfCategory(cat_id):
+
+def getAllMembersOfCategory(cat_id):
     tasks = Task.objects.filter(category_id=cat_id).values()[0]
     if tasks is not None:
         project_id = tasks["project_id_id"]
@@ -100,7 +103,7 @@ def getAllTasksOfCategory(cat_id):
     all_categories = {}
 
     for m in all_maps:
-        user = User.objects.filter(id = m["user_id_id"]).values()[0]
+        user = User.objects.filter(id=m["user_id_id"]).values()[0]
         job_id = user['job_id']
         job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
         if str(job) in all_categories:
@@ -110,3 +113,16 @@ def getAllTasksOfCategory(cat_id):
     # print(all_categories)
 
     return all_categories
+
+
+def getAllTasksOfCategory(cat_id):
+    tasks = Task.objects.filter(category_id=cat_id).values()
+    task_list = []
+    for task in tasks:
+        d = {
+
+            "id": task["id"],
+            "title": task["title"]
+        }
+        task_list.append(d)
+    return task_list

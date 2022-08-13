@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import FuncCategory
-from taskMgmt.utils import getAllTasksOfCategory
+from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory
 
 
 @api_view(["GET"])
@@ -15,7 +15,7 @@ def getCategoryData(request, cat_id):
     print(cat_id)
     category = FuncCategory.objects.filter(id=cat_id).values()[0]
     # print(category)
-    all_tasks = getAllTasksOfCategory(cat_id=cat_id)
+    all_tasks = getAllMembersOfCategory(cat_id=cat_id)
     d = {
         "category_name": category['title'],
         "expected_time": category['expected_time'],
@@ -38,8 +38,8 @@ def getAllCategorySummary(request):
     all_categories = FuncCategory.objects.all().values()
 
     for category in all_categories:
-        print(category)
-        all_tasks = getAllTasksOfCategory(cat_id=category['id'])
+        # print(category)
+        all_tasks = getAllMembersOfCategory(cat_id=category['id'])
         people_assigned = 0
         for x in all_tasks:
             people_assigned = people_assigned+1
@@ -52,4 +52,27 @@ def getAllCategorySummary(request):
         }
         d.append(d_.copy())
     return Response({"success": True, "data": d},
+                    status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def getAllCategoryWithTaskName(request):
+    data = []
+    all_categories = FuncCategory.objects.all().values()
+
+    for category in all_categories:
+        print(category)
+        all_tasks = getAllTasksOfCategory(cat_id=category['id'])
+        print("tasks",all_tasks)
+
+        category_data = {
+            "id": category["id"],
+            "title": category["title"],
+            "tasks": all_tasks
+        }
+
+        data.append(category_data)
+    print(data)
+
+    return Response({"success": True, "data": data},
                     status=status.HTTP_200_OK)
