@@ -112,7 +112,15 @@ def getAllMembersOfCategory(cat_id):
             all_categories[str(job)] = 1
     # print(all_categories)
 
-    return all_categories
+    final_data = []
+    for key, value in all_categories.items():
+        d = {
+            "post": key,
+            "count": value 
+        }
+        final_data.append(d)
+
+    return final_data
 
 
 def getAllTasksOfCategory(cat_id):
