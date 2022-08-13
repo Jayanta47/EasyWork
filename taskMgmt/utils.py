@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from unicodedata import category
-from projectAndTasks.models import Task, TaskHierarchy, User_Project_Map
+from projectAndTasks.models import Task, TaskHierarchy, User_Project_Map, Project_Category_Map
 from projectAndTasks.serializers import TaskSerializer
 from taskMgmt.models import Dependency
 from userMgmt.models import User, Designation
@@ -138,3 +138,9 @@ def getAllTasksOfCategory(cat_id):
 def updateTaskFuncCategory(task_id, new_cat_id):
     task = Task.objects.filter(id=task_id)
     task.update(category_id=new_cat_id)
+
+
+def getCategoriesUnderProject(project_id):
+    all_category_ids = Project_Category_Map.objects.filter(project=project_id).values()
+    
+    return all_category_ids

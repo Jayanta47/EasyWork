@@ -9,21 +9,21 @@ from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
-
+from taskMgmt.utils import getCategoriesUnderProject
 from .serializers import FuncCategorySerializer
 
 @api_view(["GET"])
 def getCategoryData(request, cat_id):
-    print(cat_id)
+    # print(cat_id)
     category = FuncCategory.objects.filter(id=cat_id).values()[0]
     # print(category)
-    all_tasks = getAllMembersOfCategory(cat_id=cat_id)
+    all_members = getAllMembersOfCategory(cat_id=cat_id)
     d = {
         "category_name": category['title'],
         "expected_time": category['expected_time'],
         "allocated_budget": category['allocated_budget'],
         "man_hour_per_week": category['man_hour_per_week'],
-        "allocated_members": all_tasks,
+        "allocated_members": all_members,
     }
 
     # print("all",all_tasks)
@@ -35,16 +35,16 @@ def getCategoryData(request, cat_id):
 
 
 @api_view(["GET"])
-def getAllCategorySummary(request):
+def getAllCategorySummary(request, project_id):
     d = []
-    all_categories = FuncCategory.objects.all().values()
+    # all_categories = FuncCategory.objects.all().values()
+
+    all_categories = getCategoriesUnderProject(project_id)
 
     for category in all_categories:
         # print(category)
-        members = getAllMembersOfCategory(cat_id=category['id'])
-        people_assigned = 0
-        for x in members:
-            people_assigned = people_assigned+1
+        members = getAllMembersOfCategory(project_id=project_id)
+        people_assigned = len(members)
         all_tasks = getAllTasksOfCategory(cat_id=category['id'])
         d_ = {
             "id": category['id'],
@@ -101,12 +101,14 @@ def setDecomposition(request):
 
 @api_view(["POST"])
 def editCategories(request):
+    project_id = request.data['project_id']
     category_create_list = request.data['toCreate']
     new_category_list = []
     for new_category_title in category_create_list:
         funcSerializer = FuncCategorySerializer(data={"title":new_category_title})
         if funcSerializer.is_valid():
             funcSerializer.save()
+            
             new_category_list.append(funcSerializer.data)
     
     category_modify_list = request.data['toModify']

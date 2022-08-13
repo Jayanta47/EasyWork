@@ -21,7 +21,7 @@ class Dependency (models.Model):
         related_name="parent_of_dependent_task" 
     )
 
-class User_Task (models.Model):
+class User_Task_Map (models.Model):
     id = models.AutoField(
         primary_key=True 
     ) 

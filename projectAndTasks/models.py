@@ -6,14 +6,14 @@ from costEstimation.models import FuncCategory
 
 class Project(models.Model):
 
-    id = models.AutoField( 
-        primary_key=True 
+    id = models.AutoField(
+        primary_key=True
     )
 
     title = models.CharField(
         max_length=200,
         default="Project",
-        null=False 
+        null=False
     )
 
     description = models.CharField(
@@ -25,30 +25,30 @@ class Project(models.Model):
     )
 
     allocated_time = models.IntegerField(
-        default = None, null=True 
-    ) # in number of days 
+        default=None, null=True
+    )  # in number of days
 
     budget = models.IntegerField(
         default=1000,
-        null = True
+        null=True
     )
 
     dev_type = models.CharField(
         max_length=100,
-        default = None,
-        null = True 
+        default=None,
+        null=True
     )
 
 
 class User_Project_Map(models.Model):
-    id = models.AutoField( 
+    id = models.AutoField(
         primary_key=True
     )
 
     user_id = models.ForeignKey(
         User,
-        null = False,
-        on_delete = models.CASCADE
+        null=False,
+        on_delete=models.CASCADE
     )
 
     project_id = models.ForeignKey(
@@ -64,13 +64,14 @@ class User_Project_Map(models.Model):
     )
 
     start_date = models.DateField(
-        default = None,
+        default=None,
     )
 
     duration = models.IntegerField(
-        null = False,
+        null=False,
         default=None,
     )
+
 
 class Task(models.Model):
 
@@ -80,9 +81,9 @@ class Task(models.Model):
         ("Postponed", "postponed"),
         ("Not Started", "not started"),
     ]
-    
+
     id = models.AutoField(
-        primary_key=True 
+        primary_key=True
     )
 
     project_id = models.ForeignKey(
@@ -113,17 +114,17 @@ class Task(models.Model):
 
     end_time = models.DateField(
         default=None,
-        null=True 
+        null=True
     )
 
     slack_time = models.IntegerField(
         default=0,
-        null=True 
+        null=True
     )
 
     status = models.CharField(
         max_length=15,
-        choices=STATUS_LIST ,
+        choices=STATUS_LIST,
         default="Not Started"
     )
 
@@ -131,31 +132,32 @@ class Task(models.Model):
         FuncCategory,
         on_delete=models.SET_NULL,
         default=None,
-        null=True 
+        null=True
     )
 
 
 class TaskHierarchy (models.Model):
     id = models.AutoField(
-        primary_key = True 
+        primary_key=True
     )
 
     parent_task_id = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
-        related_name = "parent_task"
+        related_name="parent_task"
     )
 
     sub_task_id = models.ForeignKey(
         Task,
         null=False,
         on_delete=models.CASCADE,
-        related_name = "sub_task"
+        related_name="sub_task"
     )
+
 
 class TaskComments (models.Model):
     id = models.AutoField(
-        primary_key = True 
+        primary_key=True
     )
 
     task = models.ForeignKey(
@@ -169,6 +171,17 @@ class TaskComments (models.Model):
     )
 
 
+class Project_Category_Map (models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
 
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE
+    )
 
-
+    category = models.ForeignKey(
+        FuncCategory,
+        on_delete=models.CASCADE
+    )

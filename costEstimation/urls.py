@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('getCategoryData/<int:cat_id>/', views.getCategoryData ),
-    path('getAllCategorySummary/', views.getAllCategorySummary ),
+    path('getAllCategorySummary/<int:project_id>/', views.getAllCategorySummary ),
     path('getAllCategoryWithTaskName/', views.getAllCategoryWithTaskName ),
     path('setDecomposition/', views.setDecomposition ),
     path('editCategories/', views.editCategories )

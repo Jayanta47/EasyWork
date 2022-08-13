@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from taskMgmt.models import Dependency, Milestones, User_Task
+from taskMgmt.models import Dependency, Milestones, User_Task_Map
 
 
 class DependencySerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class MilestonesSerializer(serializers.ModelSerializer):
 
 class User_TaskSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User_Task
+        model = User_Task_Map
         fields = [
             'id',
             'user_id',

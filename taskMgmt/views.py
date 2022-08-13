@@ -12,9 +12,10 @@ from projectAndTasks.models import Project
 from taskMgmt.serializers import DependencySerializer, MilestonesSerializer, User_TaskSerializer
 
 from .utils import *
-from .models import Dependency, Milestones, User_Task
+from .models import Dependency, Milestones, User_Task_Map
 
 from django.core.exceptions import ObjectDoesNotExist
+
 
 class DependencyHandler (
     APIView
@@ -124,10 +125,16 @@ def getTest(request, param1, param2):
     print(param1, param2)
     return Response({"success": True}, status=status.HTTP_200_OK)
 
+
 @api_view(["GET"])
 def deleteDependency(request, dependency_id):
     try:
         Dependency.objects.filter(id=dependency_id).delete()
         return Response({"success": True}, status=status.HTTP_200_OK)
     except ObjectDoesNotExist:
-        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
+        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def assignUser(request):
+    pass
