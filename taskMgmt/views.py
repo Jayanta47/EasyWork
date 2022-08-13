@@ -15,7 +15,7 @@ from .utils import *
 from .models import Dependency, Milestones, User_Task_Map
 
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import timedelta
+import datetime
 
 class DependencyHandler (
     APIView
@@ -143,8 +143,8 @@ def assignUser(request):
     if task_id != -1:
         for member_id in request.data["members"]:
             task = Task.objects.filter(id=task_id).values("start_time", "end_time")[0]
-            print("time", task["end_time"])
-            duration = timedelta(days=(task["end_time"]-task["start_time"]))
+            # print("time", task["end_time"])
+            duration = datetime.datetime(task["end_time"], '%Y-%m-%d') - datetime.datetime(task["start_time"], '%Y-%m-%d') 
             i = User_Task_Map(user_id = member_id, task_id=task_id, duration=duration)
             i.save()
     
