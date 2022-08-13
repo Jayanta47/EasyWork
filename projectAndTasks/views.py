@@ -11,6 +11,7 @@ from projectAndTasks.serializers import ProjectSerializer, TaskCommentSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
 from .models import Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 
+from django.core.exceptions import ObjectDoesNotExist
 
 class ProjectHandler (
     APIView
@@ -104,3 +105,12 @@ def getCommentOnTask(request):
 
     return Response({"success": True, "comments_list": comments_list},
                     status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def deleteTask(request, task_id):
+    try:
+        Task.objects.filter(id=task_id).delete()
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 

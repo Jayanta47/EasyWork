@@ -44,7 +44,7 @@ def getPredecessorTaskList(task_id_list):
             dependent_on_task=task_id).values()
         for predecessor_task in predecessor_tasks:
             t = {
-                'id': predecessor_task['id'],
+                'dependency_id': predecessor_task['id'],
                 'predecessor_id': predecessor_task['parent_task_id'],
                 'successor_id': task_id
             }
