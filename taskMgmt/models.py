@@ -37,7 +37,7 @@ class User_Task_Map (models.Model):
     )
 
     assign_date = models.DateField(
-        default=None, null=True  
+        auto_now_add=True, null=True  
     )
 
     duration = models.IntegerField(

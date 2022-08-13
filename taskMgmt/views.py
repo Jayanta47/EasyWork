@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from projectAndTasks.models import Project
+from projectAndTasks.models import Project, Task, User_Project_Map
 from taskMgmt.serializers import DependencySerializer, MilestonesSerializer, User_TaskSerializer
 
 from .utils import *
@@ -137,4 +137,21 @@ def deleteDependency(request, dependency_id):
 
 @api_view(["POST"])
 def assignUser(request):
-    pass
+    project_id = request.data['project_id']
+    task_id = request.data['task_id']
+
+    if project_id == -1:
+        for member_id in request.data["member"]:
+            task = Task.objects.filter(id=task_id).values("start_date", "end_date")[0]
+            duration = timedelta(task["end_date"]-task["start_date"])
+            i = User_Task_Map(user_id = member_id, task_id=task_id, duration=duration)
+            i.save()
+    else:
+        for member_id in request.data["member"]:
+            project = Project.objects.filter(id=project_id).values("allocated_time")[0]
+            duration = project["duration"]
+            user = User.objects.filter(id=member_id).values()
+            role = Designation.objects.filter(id=user["job_id"]).values("job_name")[0]
+            i = User_Project_Map(user_id = member_id, project_id=project_id, duration=duration, project_role=role)
+            i.save()
+    return Response({"success": True}, status=status.HTTP_200_OK)

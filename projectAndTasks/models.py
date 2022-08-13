@@ -64,7 +64,7 @@ class User_Project_Map(models.Model):
     )
 
     start_date = models.DateField(
-        default=None,
+        auto_now_add=True
     )
 
     duration = models.IntegerField(

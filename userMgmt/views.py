@@ -24,6 +24,6 @@ def getAllDesignation(request):
 @api_view(["POST"])
 def getUsersUnderDesignation(request):
     job_name = request.data["job_name"]
-    all_members = User.objects.filter(job__job_name=job_name).values("first_name", "last_name", "email")
+    all_members = User.objects.filter(job__job_name=job_name).values("id", "first_name", "last_name", "email")
 
     return Response({"success": True, "members":all_members}, status=status.HTTP_200_OK) 
