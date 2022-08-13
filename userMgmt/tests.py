@@ -84,3 +84,26 @@ from django.test import TestCase
 #         }
 #     ] 
 # }
+
+# set decomposition
+
+# url: 127.0.0.1:8000/costEstm/setDecomposition/
+
+# data:
+
+# {
+#     "data": [
+#         {
+#             "id":13,
+#             "tasks": [
+#                 {
+#                     "id":3
+#                 },
+#                 {
+#                     "id":6
+#                 }
+#             ]
+#         }
+#     ],
+#     "toDelete": [14] 
+# }
