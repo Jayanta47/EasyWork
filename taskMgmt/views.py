@@ -15,7 +15,7 @@ from .utils import *
 from .models import Dependency, Milestones, User_Task_Map
 
 from django.core.exceptions import ObjectDoesNotExist
-
+from datetime import timedelta
 
 class DependencyHandler (
     APIView
@@ -139,15 +139,16 @@ def deleteDependency(request, dependency_id):
 def assignUser(request):
     project_id = request.data['project_id']
     task_id = request.data['task_id']
-
+    print(request.data)
     if task_id != -1:
-        for member_id in request.data["member"]:
-            task = Task.objects.filter(id=task_id).values("start_date", "end_date")[0]
-            duration = timedelta(task["end_date"]-task["start_date"])
+        for member_id in request.data["members"]:
+            task = Task.objects.filter(id=task_id).values("start_time", "end_time")[0]
+            print("time", task["end_time"])
+            duration = timedelta(days=(task["end_time"]-task["start_time"]))
             i = User_Task_Map(user_id = member_id, task_id=task_id, duration=duration)
             i.save()
     
-    for member_id in request.data["member"]:
+    for member_id in request.data["members"]:
         project = Project.objects.filter(id=project_id).values("allocated_time")[0]
         duration = project["duration"]
         user = User.objects.filter(id=member_id).values()
