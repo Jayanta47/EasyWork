@@ -6,7 +6,7 @@ urlpatterns = [
     path('addproject/', views.ProjectHandler.as_view()),
     path('getproject/<int:project_id>/', views.ProjectHandler.as_view()),
     path('addtask/', views.TaskHandler.as_view() ),
-    path('updateTask/', views.updateTask ),
+    path('updateTask/<int:pk>/', views.UpdateTask.as_view() ), #use patch here
     path('getcomments/', views.getCommentOnTask ),
     path('addcomments/', views.TaskCommentHandler.as_view() ),
     path('addtaskparent/', views.TaskHierarchyHandler.as_view() ),

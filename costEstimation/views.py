@@ -127,7 +127,7 @@ def editCategories(request):
 
     for category_data in category_modify_list:
         funcData = FuncCategory.objects.get(id=category_data['id'])
-        print(funcData)
+        # print(funcData)
         funcSerializer = FuncCategorySerializer(funcData, data=category_data)
         if funcSerializer.is_valid():
             funcSerializer.save()

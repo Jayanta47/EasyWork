@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
+from .serializers import UserSerializer
+
 from .models import *
 
 @api_view(["GET"])
@@ -27,3 +29,29 @@ def getUsersUnderDesignation(request):
     all_members = User.objects.filter(job__job_name=job_name).values("id", "first_name", "last_name", "email")
 
     return Response({"success": True, "members":all_members}, status=status.HTTP_200_OK) 
+
+@api_view(["POST"])
+def addUser(request):
+    data = request.data
+
+    userSerializer = UserSerializer(data=data)
+    if userSerializer.is_valid():
+        userSerializer.save()
+        return Response(userSerializer.data, status=status.HTTP_200_OK)
+    else:
+        print(userSerializer.data)
+        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def modifyUser(request):
+    data = request.data
+
+    user = User.objects.get(id=data["id"])
+    userSerializer = UserSerializer(user, data=data)
+    if userSerializer.is_valid():
+        userSerializer.save()
+        return Response(userSerializer.data, status=status.HTTP_200_OK)
+    else:
+        print(userSerializer.data)
+        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
