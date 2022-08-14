@@ -142,6 +142,18 @@ class UpdateTask(generics.UpdateAPIView):
     serializer_class = TaskSerializer
 
 
-@api_view(["GET"])
-def getProjectTreeStructure(request, project_id):
-    pass
+# @api_view(["GET"])
+# def getProjectTreeStructure(request, project_id):
+#     all_tasks_in_project = Task.objects.all().values("id")
+
+#     current_level = []
+#     depth = 1
+#     isEnd = False 
+
+#     for task in all_tasks_in_project:
+#         if TaskHierarchy.objects.filter(sub_task_id_id = task["id"]).count() == 0:
+#             current_level.append(task)
+    
+
+    
+#     return Response({"success": True}, status=status.HTTP_200_OK)

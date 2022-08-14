@@ -5,6 +5,7 @@ from projectAndTasks.models import Project, Task, TaskHierarchy, User_Project_Ma
 from projectAndTasks.serializers import TaskSerializer
 from taskMgmt.models import Dependency, User_Task_Map
 from userMgmt.models import User, Designation
+from costEstimation.models import FuncCategory
 
 from django.utils import timezone
 from django.db.models import Q 
@@ -163,7 +164,8 @@ def getAllTasksOfCategory(cat_id):
 
 def updateTaskFuncCategory(task_id, new_cat_id):
     task = Task.objects.filter(id=task_id)
-    task.update(category_id=new_cat_id)
+    category = FuncCategory.objects.get(new_cat_id)
+    task.update(category_id=category)
 
 
 def getCategoriesUnderProject(project_id):
