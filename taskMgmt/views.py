@@ -15,7 +15,7 @@ from .utils import *
 from .models import Dependency, Milestones, User_Task_Map
 
 from django.core.exceptions import ObjectDoesNotExist
-import datetime
+from datetime import datetime
 
 class DependencyHandler (
     APIView
@@ -139,21 +139,28 @@ def deleteDependency(request, dependency_id):
 def assignUser(request):
     project_id = request.data['project_id']
     task_id = request.data['task_id']
+    abc = User.objects.all().values()
+    print(abc)
     print(request.data)
     if task_id != -1:
         for member_id in request.data["members"]:
             task = Task.objects.filter(id=task_id).values("start_time", "end_time")[0]
             # print("time", task["end_time"])
-            duration = datetime.datetime(task["end_time"], '%Y-%m-%d') - datetime.datetime(task["start_time"], '%Y-%m-%d') 
-            i = User_Task_Map(user_id = member_id, task_id=task_id, duration=duration)
+            duration = task["end_time"] - task["start_time"] 
+            duration = duration.days
+            # duration = datetime.datetime(2015,11,15)
+            user = User.objects.get(id = member_id)
+            task = Task.objects.get(id=task_id)
+            i = User_Task_Map(user_id = user, task_id=task, duration=duration)
             i.save()
     
     for member_id in request.data["members"]:
         project = Project.objects.filter(id=project_id).values("allocated_time")[0]
-        duration = project["duration"]
-        user = User.objects.filter(id=member_id).values()
-        role = Designation.objects.filter(id=user["job_id"]).values("job_name")[0]
-        i = User_Project_Map(user_id = member_id, project_id=project_id, duration=duration, project_role=role)
+        duration = project["allocated_time"]
+        user = User.objects.get(id=member_id)
+        role = Designation.objects.get(id=user.job_id)
+        project = Project.objects.get(id = project_id)
+        i = User_Project_Map(user_id = user, project_id=project, duration=duration, project_role=role)
         i.save()
     return Response({"success": True}, status=status.HTTP_200_OK)
 
