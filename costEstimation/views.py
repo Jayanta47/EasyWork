@@ -9,7 +9,7 @@ from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
-from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks
+from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap
 from .serializers import FuncCategorySerializer
 
 
@@ -120,7 +120,7 @@ def editCategories(request):
             data={"title": new_category_title})
         if funcSerializer.is_valid():
             funcSerializer.save()
-
+            addProjectCategoryMap(project_id, funcSerializer.data['id'])
             new_category_list.append(funcSerializer.data)
 
     category_modify_list = request.data['toModify']

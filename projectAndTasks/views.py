@@ -14,6 +14,7 @@ from .models import Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class ProjectHandler (
     APIView
 ):
@@ -114,17 +115,17 @@ def deleteTask(request, task_id):
         Task.objects.filter(id=task_id).delete()
         return Response({"success": True}, status=status.HTTP_200_OK)
     except ObjectDoesNotExist:
-        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
+        return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
 
 # @api_view(["POST"])
 # def updateTask(request):
 #     data = request.data
-    
+
 #     task_id = data["id"]
 #     task = Task.objects.get(id=task_id)
 #     # print("project_id", task.project_id.id)
 #     # task.project_id = task.project_id.id
-    
+
 #     task_serializer = TaskSerializer(task, data=data)
 
 #     if task_serializer.is_valid():
@@ -132,9 +133,15 @@ def deleteTask(request, task_id):
 #         return Response(task_serializer.data, status=status.HTTP_200_OK)
 #     else:
 #         print(task_serializer.data)
-#         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
-    
+#         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UpdateTask(generics.UpdateAPIView):
     queryset = Task.objects.all()
 
     serializer_class = TaskSerializer
+
+
+@api_view(["GET"])
+def getProjectTreeStructure(request, project_id):
+    pass

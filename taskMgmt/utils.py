@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from unicodedata import category
 from costEstimation.models import FuncCategory
-from projectAndTasks.models import Task, TaskHierarchy, User_Project_Map, Project_Category_Map
+from projectAndTasks.models import Project, Task, TaskHierarchy, User_Project_Map, Project_Category_Map
 from projectAndTasks.serializers import TaskSerializer
 from taskMgmt.models import Dependency, User_Task_Map
 from userMgmt.models import User, Designation
@@ -189,3 +189,6 @@ def getUnCategorisedTasks(project_id):
         }
         task_list.append(d)
     return task_list
+
+def addProjectCategoryMap(project_id, category_id):
+    t = Project_Category_Map.objects.create(project_id=project_id, category_id=category_id)
