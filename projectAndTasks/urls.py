@@ -11,5 +11,5 @@ urlpatterns = [
     path('addcomments/', views.TaskCommentHandler.as_view() ),
     path('addtaskparent/', views.TaskHierarchyHandler.as_view() ),
     path('deleteTask/<int:task_id>/', views.deleteTask ),
-    path('getProjectTreeStructure/<int:project_id>', views.getProjectTreeStructure ), 
+    # path('getProjectTreeStructure/<int:project_id>/', views.getProjectTreeStructure ), 
 ]
