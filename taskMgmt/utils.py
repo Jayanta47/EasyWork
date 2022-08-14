@@ -7,7 +7,7 @@ from taskMgmt.models import Dependency, User_Task_Map
 from userMgmt.models import User, Designation
 
 from django.utils import timezone
-
+from django.db.models import Q 
 
 def getTasksList(project_id):
     tasks = Task.objects.filter(project_id=project_id).values()
@@ -173,3 +173,19 @@ def getCategoriesUnderProject(project_id):
         category = FuncCategory.objects.filter(id=project_category_map['category_id']).values()[0]
         all_categories.append(category)
     return all_categories
+
+
+def getUnCategorisedTasks(project_id):
+    tasks = Task.objects.filter(
+        Q(project_id=project_id) & Q(category_id__isnull=True)
+    ).values()
+
+    task_list = []
+    for task in tasks:
+        d = {
+
+            "id": task["id"],
+            "title": task["title"]
+        }
+        task_list.append(d)
+    return task_list
