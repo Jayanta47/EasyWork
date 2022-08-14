@@ -162,8 +162,13 @@ def getAllTasksOfCategory(cat_id):
     return task_list
 
 def updateTaskFuncCategory(task_id, new_cat_id):
-    task = Task.objects.filter(id=task_id)
-    task.update(category_id=new_cat_id)
+    # print('done', task_id, new_cat_id)
+    if new_cat_id != 0:
+        Task.objects.filter(id=task_id).update(category_id_id=new_cat_id)
+    else :
+        Task.objects.filter(id=task_id).update(category_id=None)
+    # task.update(category_id_id=new_cat_id)
+    
 
 
 def getCategoriesUnderProject(project_id):

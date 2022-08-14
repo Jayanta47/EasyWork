@@ -80,14 +80,14 @@ def getAllCategoryWithTaskName(request, project_id):
     # print(data)
 
     uncategorised_tasks = getUnCategorisedTasks(project_id) # returns list of dict
-    if len(uncategorised_tasks) > 0:
-        category_data = {
-            "id": 0,
-            "title": "Unlisted",
-            "tasks": uncategorised_tasks
-        }
+    
+    category_data = {
+        "id": 0,
+        "title": "Unlisted",
+        "tasks": uncategorised_tasks
+    }
 
-        data.append(category_data)
+    data.append(category_data)
 
     return Response({"success": True, "data": data},
                     status=status.HTTP_200_OK)
@@ -120,6 +120,7 @@ def editCategories(request):
             data={"title": new_category_title})
         if funcSerializer.is_valid():
             funcSerializer.save()
+            print(funcSerializer.data)
             addProjectCategoryMap(project_id, funcSerializer.data['id'])
             new_category_list.append(funcSerializer.data)
 
