@@ -17,7 +17,7 @@ from .serializers import FuncCategorySerializer
 def getCategoryData(request, cat_id):
     category = FuncCategory.objects.filter(id=cat_id).values()
     if len(category) > 0:
-
+        category = category[0]
         all_members = getAllMembersOfCategory(cat_id=cat_id)
         d = {
             "category_name": category['title'],
