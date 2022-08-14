@@ -112,4 +112,7 @@ class User(models.Model):
         null=False
     )
 
+    @property
+    def full_name(self):
+        return self.first_name + self.last_name
 

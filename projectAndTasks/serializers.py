@@ -30,6 +30,20 @@ class User_Project_Map_Serializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
 
+    # def update(self, instance, validated_data):
+    #     # print("project_id", instance.project_id.id)
+    #     instance.project_id = validated_data.get('project_id', instance.project_id.id)
+    #     instance.title = validated_data.get('title', instance.title)
+    #     instance.description = validated_data.get('description', instance.description)
+    #     instance.creation_time = validated_data.get('creation_time', instance.creation_time)
+    #     instance.start_time = validated_data.get('start_time', instance.start_time)
+    #     instance.end_time = validated_data.get('end_time', instance.end_time)
+    #     instance.slack_time = validated_data.get('slack_time', instance.slack_time)
+    #     instance.status = validated_data.get('status', instance.status)
+    #     instance.category_id = validated_data.get('category_id', instance.category_id)
+    #     instance.save()
+    #     return instance
+
     class Meta:
         model = Task
         fields = [

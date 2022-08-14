@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework import generics
 
 from projectAndTasks.serializers import ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
@@ -115,7 +116,25 @@ def deleteTask(request, task_id):
     except ObjectDoesNotExist:
         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
 
-@api_view(["POST"])
-def updateTask(request):
-    data = request.data
+# @api_view(["POST"])
+# def updateTask(request):
+#     data = request.data
     
+#     task_id = data["id"]
+#     task = Task.objects.get(id=task_id)
+#     # print("project_id", task.project_id.id)
+#     # task.project_id = task.project_id.id
+    
+#     task_serializer = TaskSerializer(task, data=data)
+
+#     if task_serializer.is_valid():
+#         task_serializer.save()
+#         return Response(task_serializer.data, status=status.HTTP_200_OK)
+#     else:
+#         print(task_serializer.data)
+#         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST) 
+    
+class UpdateTask(generics.UpdateAPIView):
+    queryset = Task.objects.all()
+
+    serializer_class = TaskSerializer
