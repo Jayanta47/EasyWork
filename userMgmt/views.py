@@ -1,3 +1,4 @@
+import imp
 from django.shortcuts import render
 
 # Create your views here.
@@ -7,28 +8,34 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .serializers import UserSerializer
+from projectAndTasks.models import User_Project_Map
+from taskMgmt.models import User_Task_Map
 
 from .models import *
+
 
 @api_view(["GET"])
 def getAllUsersInfo(request):
     user_info = User.objects.all().values()
 
-    return Response({"success": True, "user_info":user_info}, status=status.HTTP_200_OK)
+    return Response({"success": True, "user_info": user_info}, status=status.HTTP_200_OK)
+
 
 @api_view(["GET"])
 def getAllDesignation(request):
     all_designation = Designation.objects.all().values("job_name")
 
-    return Response({"success": True, "designation":all_designation}, status=status.HTTP_200_OK) 
+    return Response({"success": True, "designation": all_designation}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def getUsersUnderDesignation(request):
     job_name = request.data["job_name"]
-    all_members = User.objects.filter(job__job_name=job_name).values("id", "first_name", "last_name", "email")
+    all_members = User.objects.filter(job__job_name=job_name).values(
+        "id", "first_name", "last_name", "email")
 
-    return Response({"success": True, "members":all_members}, status=status.HTTP_200_OK) 
+    return Response({"success": True, "members": all_members}, status=status.HTTP_200_OK)
+
 
 @api_view(["POST"])
 def addUser(request):
@@ -55,3 +62,25 @@ def modifyUser(request):
     else:
         print(userSerializer.data)
         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def getSelectedUsers(request):
+    data = request.data
+
+    project_id = data["project_id"]
+    task_id = data["task_id"]
+
+    if task_id == -1:
+        all_users_map = User_Project_Map.objects.filter(project_id_id=project_id).values()
+        # print(all_users_map)
+    else :
+        all_users_map = User_Task_Map.objects.filter(task_id_id=task_id).values()
+
+    all_user_data = []
+
+    for user_map in all_users_map:
+        user_data = User.objects.filter(id=user_map['user_id_id']).values()[0]
+        all_user_data.append(user_data)
+
+    return Response({"success": True, "members": all_user_data}, status=status.HTTP_200_OK)
