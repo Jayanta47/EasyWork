@@ -81,6 +81,9 @@ def getSelectedUsers(request):
 
     for user_map in all_users_map:
         user_data = User.objects.filter(id=user_map['user_id_id']).values()[0]
+        job_id = user_data["job_id"]
+        job_name = Designation.objects.filter(id=job_id).values("job_name")[0]
+        user_data["designation"] = job_name["job_name"]
         all_user_data.append(user_data)
 
     return Response({"success": True, "members": all_user_data}, status=status.HTTP_200_OK)
