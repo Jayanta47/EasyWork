@@ -141,3 +141,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # )
 
 TIME_ZONE = 'Asia/Dacca'
+
+
+AUTH_USER_MODEL = 'userMgmt.User'

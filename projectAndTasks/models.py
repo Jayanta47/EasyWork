@@ -47,20 +47,20 @@ class User_Project_Map(models.Model):
 
     user_id = models.ForeignKey(
         User,
-        null=False,
+        null=True,
         on_delete=models.CASCADE
     )
 
     project_id = models.ForeignKey(
         Project,
-        null=False,
+        null=True,
         on_delete=models.CASCADE
     )
 
     project_role = models.ForeignKey(
         Designation,
         on_delete=models.CASCADE,
-        null=False
+        null=True 
     )
 
     start_date = models.DateField(
@@ -68,7 +68,7 @@ class User_Project_Map(models.Model):
     )
 
     duration = models.IntegerField(
-        null=False,
+        null=True,
         default=None,
     )
 
@@ -144,12 +144,13 @@ class TaskHierarchy (models.Model):
     parent_task_id = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
+        null=True,
         related_name="parent_task"
     )
 
     sub_task_id = models.ForeignKey(
         Task,
-        null=False,
+        null=True,
         on_delete=models.CASCADE,
         related_name="sub_task"
     )
