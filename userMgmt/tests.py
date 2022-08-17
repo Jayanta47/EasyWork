@@ -107,3 +107,15 @@ from django.test import TestCase
 #     ],
 #     "toDelete": [14] 
 # }
+
+# update user
+
+# url: 127.0.0.1:8000/user/updateUser/2/
+
+# data:
+# {
+#     "first_name": "Jayanta",
+#     "last_name": "Sadhu",
+#     "date_of_birth": "1999-02-17",
+#     "gender": "M"
+# }

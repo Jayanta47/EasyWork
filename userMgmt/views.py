@@ -6,6 +6,9 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework.exceptions import AuthenticationFailed
 
 from .serializers import UserSerializer
 from projectAndTasks.models import User_Project_Map
@@ -49,6 +52,10 @@ def addUser(request):
         print(userSerializer.data)
         return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
 
+class UpdateUser(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 @api_view(["POST"])
 def modifyUser(request):
@@ -87,3 +94,28 @@ def getSelectedUsers(request):
         all_user_data.append(user_data)
 
     return Response({"success": True, "members": all_user_data}, status=status.HTTP_200_OK)
+
+
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data["password"]
+
+        user = User.objects.filter(email=email).first()
+
+        if user is None:
+            raise AuthenticationFailed("User Not Found")
+
+        if not user.check_password(password):
+            raise AuthenticationFailed("Incorrect Password")
+
+        return Response({"success": True})
