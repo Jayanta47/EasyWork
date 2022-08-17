@@ -31,8 +31,19 @@ def getAllDesignation(request):
 @api_view(["POST"])
 def getUsersUnderDesignation(request):
     job_name = request.data["job_name"]
-    all_members = User.objects.filter(job__job_name=job_name).values(
-        "id", "first_name", "last_name", "email")
+    all_members = []
+    members = User.objects.filter(job__job_name=job_name).values(
+        "id", "first_name", "last_name", "email", "joining_date")
+    for member in members:
+        assigned = User_Task_Map.objects.filter(user_id = member["id"]).values("id")
+        all_members.append({
+            "id": member["id"],
+            "first_name": member["first_name"],
+            "last_name": member["last_name"],
+            "email": member["email"],
+            "joining_date": member["joining_date"],
+            "assigned_count": len(assigned)
+        })
 
     return Response({"success": True, "members": all_members}, status=status.HTTP_200_OK)
 
