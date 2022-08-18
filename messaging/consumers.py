@@ -9,11 +9,13 @@ from .models import Notification
 from userMgmt.models import User
 
 @database_sync_to_async
-def create_notificaton(receiver, type_of="task_created", status="unread"):
-    notification_to_create = Notification.objects.create(user_revoker=receiver,
-                type_of_notification=type_of)
+def create_notificaton(sender, receiver, type_of="task_created", status="unread"):
     print('I am here to help')
-    return (notification_to_create.user_revoker.id, notification_to_create.type_of_notification)
+    notification_to_create = Notification.objects.create(user_sender=sender, 
+                user_revoke=receiver,
+                type_of_notification=type_of)
+    
+    return (notification_to_create.user_revoke.id, notification_to_create.type_of_notification)
 
 
 @database_sync_to_async
@@ -54,12 +56,15 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         text_data_json = json.loads(text_data)
 
         message = text_data_json["message"]
-        user_id = text_data_json["user_id"]
+        sender_id = text_data_json["sender_id"]
+        receiver_id = text_data_json["receiver_id"]
 
-        receiver = await get_user(user_id)
-        print(receiver)
+        sender = await get_user(sender_id)
+        receiver = await get_user(receiver_id)
+        print(sender.first_name)
+        print(receiver.first_name)
 
-        create_notificaton(receiver)
+        getof = await create_notificaton(sender, receiver)
 
         event = {
             'type': 'send_message',

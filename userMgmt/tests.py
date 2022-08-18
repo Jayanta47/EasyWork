@@ -107,3 +107,13 @@ from django.test import TestCase
 #     ],
 #     "toDelete": [14] 
 # }
+
+
+# redis opening:
+
+# sudo docker run -p 6379:6379 -d redis:5
+
+# notification testing 
+# https://websocketking.com/
+
+# ws://127.0.0.1:8000/message/notification_testing/
