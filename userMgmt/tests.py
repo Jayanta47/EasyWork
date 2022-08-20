@@ -1,5 +1,5 @@
-from unicodedata import decomposition
-from django.test import TestCase
+# from unicodedata import decomposition
+# from django.test import TestCase
 
 # Create your tests here.
 
