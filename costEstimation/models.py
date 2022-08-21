@@ -59,7 +59,10 @@ class FuncCategory (models.Model):
         default=0
     )
 
-
+    misc_cost = models.IntegerField( 
+        null=True,
+        default=0
+    )
 
 # class Category_employee_effort_map (models.Model):
 #     id = models.AutoField(
