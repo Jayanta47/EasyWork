@@ -26,5 +26,12 @@ class FuncCategorySerializer(serializers.ModelSerializer):
             "title",
             "expected_time",
             "man_hour_per_week",
-            "allocated_budget"
+            "allocated_budget",
+            "loc",
+            "loc_per_pm",
+            "cost_per_loc",
+            "difficulty",
+            "estimated_cost"
         ]
+
+

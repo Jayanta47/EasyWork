@@ -54,7 +54,7 @@ class FuncCategory (models.Model):
         default="E"
     )
 
-    estimated_cost = models.IntegerField(
+    estimated_cost = models.IntegerField( 
         null=True,
         default=0
     )
