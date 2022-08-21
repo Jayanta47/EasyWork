@@ -5,7 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
+
+from rest_framework import generics
+# from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
@@ -134,3 +136,9 @@ def editCategories(request):
             funcSerializer.save()
 
     return Response({"success": True}, status=status.HTTP_200_OK)
+
+
+class UpdateFuncCategory(generics.UpdateAPIView):
+    queryset = FuncCategory.objects.all()
+
+    serializer_class = FuncCategorySerializer
