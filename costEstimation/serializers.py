@@ -31,7 +31,8 @@ class FuncCategorySerializer(serializers.ModelSerializer):
             "loc_per_pm",
             "cost_per_loc",
             "difficulty",
-            "estimated_cost"
+            "estimated_cost",
+            "misc_cost"
         ]
 
 

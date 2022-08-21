@@ -8,5 +8,6 @@ urlpatterns = [
     path('getAllCategoryWithTaskName/<int:project_id>/', views.getAllCategoryWithTaskName ),
     path('setDecomposition/', views.setDecomposition ),
     path('editCategories/', views.editCategories ),
-    path('updateFuncCat/<int:pk>/', views.UpdateFuncCategory.as_view() ) #use path here
+    path('updateFuncCat/<int:pk>/', views.UpdateFuncCategory.as_view() ), #use path here
+    path('getCostMonthGraph/', views.getCostMonthGraph )
 ]
