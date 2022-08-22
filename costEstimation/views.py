@@ -155,4 +155,9 @@ def getCostMonthGraph(request):
     else:
         all_categories = FuncCategory.objects.filter(id=data["category_id"]).values()
 
-    return cost_month_graph(all_categories)
+    data = cost_month_graph(all_categories)
+    return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
+
+# class DeleteFuncCategory(generics.DestroyAPIView):
+#     queryset = FuncCategory.objects.all()
+#     serializer_class = FuncCategorySerializer

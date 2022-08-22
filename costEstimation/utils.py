@@ -41,6 +41,9 @@ def cost_month_graph(all_categories):
             "cost": category["misc_cost"] + category["estimated_cost"]
         }
 
+        if len(d["category_time_map"]) == 0:
+            continue
+
         if start_date == inf:
             start_date = d["category_time_map"][0][0]
             end_date = d["category_time_map"][0][1]
@@ -52,7 +55,7 @@ def cost_month_graph(all_categories):
         
 
     # print(category_props)
-    # print(start_date, end_date)
+    print(start_date, end_date)
     
     time_slots = []
     current_date = start_date
@@ -92,7 +95,7 @@ def cost_month_graph(all_categories):
     for i in range(len(time_slots)):
         print(time_slots[i], "->", slot_cost[i])
         data.append([time_slots[i][0], time_slots[i][1], slot_cost[i]])
-
+    print(data)
     return data
 
     

@@ -241,6 +241,8 @@ def getTaskListTimeMap(task_list):
     task_start_end_list = []
     time_map = []
 
+    if len(task_list) == 0:
+        return time_map
     for task in task_list:
         start_date = task["start_time"]
         end_date = task["end_time"]
