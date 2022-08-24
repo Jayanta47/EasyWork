@@ -149,12 +149,12 @@ class UpdateFuncCategory(generics.UpdateAPIView):
 @api_view(["POST"])
 def getCostMonthGraph(request):
     data = request.data
-
-    if data["all"]:
-        all_categories = FuncCategory.objects.all().values()
+    project_id = data['project_id']
+    if data["all"]==True:
+        all_categories = getCategoriesUnderProject(project_id)
     else:
         all_categories = FuncCategory.objects.filter(id=data["category_id"]).values()
-
+    print(all_categories)
     data = cost_month_graph(all_categories)
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
 
