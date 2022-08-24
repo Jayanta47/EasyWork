@@ -183,14 +183,14 @@ def addProjectCategoryMap(project_id, category_id):
 def totalDaysInCategory(category_id):
     all_tasks = Task.objects.filter(category_id=category_id).values()
 
-    return durationOfTasks(all_tasks=all_tasks)
+    return totalDurationOfTasks(all_tasks=all_tasks)
 
 def totalDaysInProject(project_id):
     all_tasks = Task.objects.filter(project_id=project_id).values()
 
-    return durationOfTasks(all_tasks=all_tasks)
+    return totalDurationOfTasks(all_tasks=all_tasks)
 
-def durationOfTasks(all_tasks):
+def totalDurationOfTasks(all_tasks):
     curr_time = date.today()
     task_start_end_list = []
     for task in all_tasks:
@@ -200,8 +200,8 @@ def durationOfTasks(all_tasks):
             (task['id'], (start_date-curr_time).days, (end_date-curr_time).days))
 
     task_start_end_list = sorted(task_start_end_list, key=lambda x: x[2])
-    print(task_start_end_list)
-
+    
+    # print(task_start_end_list)
     total_duration = 0
 
     last_finishing_time = -inf
@@ -214,6 +214,66 @@ def durationOfTasks(all_tasks):
         last_finishing_time = x[2]
 
     return total_duration
+
+
+
+
+def getCategoryTimeMap(category_id):
+    all_tasks = Task.objects.filter(category_id=category_id).values()
+
+    return getTaskListTimeMap(all_tasks)
+
+
+def timeOfCategoryInRange(start_date, end_date, time_map):
+    total_time = 0
+
+    for time_interval in time_map:
+        start = max(time_interval[0], start_date)
+        end = min(time_interval[1], end_date)
+
+        days = (end-start).days
+        if days < 0:
+            total_time += 0
+        else:
+            total_time += days 
+    
+    return total_time
+
+def getTaskListTimeMap(task_list):
+    task_start_end_list = []
+    time_map = []
+
+    if len(task_list) == 0:
+        return time_map
+    for task in task_list:
+        start_date = task["start_time"]
+        end_date = task["end_time"]
+        task_start_end_list.append(
+            (task['id'], start_date, end_date))
+
+    task_start_end_list = sorted(task_start_end_list, key=lambda x: x[1])
+
+    # print(task_start_end_list)
+
+    current_segment_start_date = task_start_end_list[0][1]
+    current_segment_end_date = task_start_end_list[0][2]
+    
+    for x in task_start_end_list:
+        end_date = x[2]
+        start_date = x[1]
+
+        if current_segment_end_date < start_date:
+            segment_tuple = (current_segment_start_date, current_segment_end_date)
+            time_map.append(segment_tuple)
+            current_segment_start_date = start_date
+            current_segment_end_date = end_date
+        else:
+            current_segment_end_date = max(end_date, current_segment_end_date)
+
+    time_map.append((current_segment_start_date, current_segment_end_date))
+
+    # print(time_map)
+    return time_map
 
 # error in implementation
 

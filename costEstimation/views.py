@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from rest_framework import generics
+
+from costEstimation.utils import cost_month_graph
 # from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
@@ -143,3 +145,20 @@ class UpdateFuncCategory(generics.UpdateAPIView):
     queryset = FuncCategory.objects.all()
 
     serializer_class = FuncCategorySerializer
+
+
+@api_view(["POST"])
+def getCostMonthGraph(request):
+    data = request.data
+    project_id = data['project_id']
+    if data["all"]==True:
+        all_categories = getCategoriesUnderProject(project_id)
+    else:
+        all_categories = FuncCategory.objects.filter(id=data["category_id"]).values()
+    print(all_categories)
+    data = cost_month_graph(all_categories)
+    return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
+
+# class DeleteFuncCategory(generics.DestroyAPIView):
+#     queryset = FuncCategory.objects.all()
+#     serializer_class = FuncCategorySerializer

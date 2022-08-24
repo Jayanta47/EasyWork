@@ -157,3 +157,11 @@ class UpdateTask(generics.UpdateAPIView):
 
     
 #     return Response({"success": True}, status=status.HTTP_200_OK)
+
+class UpdateProject(generics.UpdateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+class DeleteProject(generics.DestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
