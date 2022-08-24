@@ -108,15 +108,17 @@ def getAllMembersOfCategory(cat_id):
             job_id = user['job_id']
             job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
             if str(job) in all_categories:
-                all_categories[str(job)] = all_categories[str(job)] + 1
+                all_categories[str(job)]["count"] = all_categories[str(job)]["count"] + 1
+                all_categories[str(job)]["users"].append(user["id"])
             else:
-                all_categories[str(job)] = 1
+                all_categories[str(job)]= {"count": 1, "users": [ user["id"] ]}
 
     final_data = []
     for key, value in all_categories.items():
         d = {
             "post": key,
-            "count": value
+            "count": value["count"],
+            "users": value["users"]
         }
         final_data.append(d)
 
@@ -199,7 +201,7 @@ def durationOfTasks(all_tasks):
 
     task_start_end_list = sorted(task_start_end_list, key=lambda x: x[2])
     print(task_start_end_list)
-    
+
     total_duration = 0
 
     last_finishing_time = -inf
@@ -210,7 +212,7 @@ def durationOfTasks(all_tasks):
         else:
             total_duration = total_duration + x[2] - last_finishing_time+1
         last_finishing_time = x[2]
-    
+
     return total_duration
 
 # error in implementation
