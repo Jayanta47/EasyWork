@@ -509,6 +509,33 @@ def generateDependencyGraph(ancestry):
     return fig_name
 
 
+
+def getUserTaskList(project_id, user_id):
+    all_user_tasks = User_Task_Map.objects.filter(user_id=user_id).values()
+    selected_tasks = []
+    for ut_map in all_user_tasks:
+        task_id = ut_map['task_id_id']
+        task = Task.objects.filter(task_id=task_id, project_id=project_id).values()
+        if len(task) != 0:
+            selected_tasks.append(task[0])
+
+    return selected_tasks
+
+
+def getUserSubTaskList(task_id, user_id):
+    all_user_tasks = User_Task_Map.objects.filter(user_id=user_id).values()
+    selected_tasks = []
+    for ut_map in all_user_tasks:
+        task_id = ut_map['task_id_id']
+        subtask_list = TaskHierarchy.objects.filter(parent_task_id__id = task_id).values()
+        if len(subtask_list) != 0:
+            for subtask in subtask_list:
+                subtask_id = subtask["id"]
+                task = Task.objects.filter(task_id=subtask_id).values().first()
+                selected_tasks.append(task)
+
+    return selected_tasks
+
 def updateTaskMapForUserAndCat(category_id, user_id, effort, wage):
     task_in_cat_list = Task.objects.filter(category_id=category_id).values()
     user_task_list = []
@@ -518,9 +545,6 @@ def updateTaskMapForUserAndCat(category_id, user_id, effort, wage):
         if len(user_task_map) > 0:
             user_task_map_id = user_task_map[0]['id']
             User_Task_Map.objects.filter(id=user_task_map_id).update(weekly_effort=effort, wage=wage)
-
-
-
 
 # error in implementation
 
