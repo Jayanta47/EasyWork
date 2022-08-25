@@ -46,12 +46,12 @@ class User_Task_Map (models.Model):
     )
 
     weekly_effort = models.IntegerField(
-        default=None,
+        default=0,
         null=True
     )
 
     wage = models.IntegerField(
-        default = None,
+        default = 0,
         null = True
     )
 
