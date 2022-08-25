@@ -24,7 +24,7 @@ def estimateEffort(loc, task_level, months):
 
 
 def cost_month_graph(all_categories):
-    all_categories = FuncCategory.objects.all().values()
+    # all_categories = FuncCategory.objects.all().values()
 
     category_props = {}
 
@@ -42,6 +42,7 @@ def cost_month_graph(all_categories):
         }
 
         if len(d["category_time_map"]) == 0:
+            # print("haha")
             continue
 
         if start_date == inf:
@@ -50,12 +51,15 @@ def cost_month_graph(all_categories):
         else:
             start_date = min(start_date, d["category_time_map"][0][0])
             end_date = max(end_date, d["category_time_map"][0][1])
-
+        print(d)
         category_props[str(category["id"])] = d
         
 
-    # print(category_props)
-    print(start_date, end_date)
+    print("props", category_props)
+    # print(start_date, end_date)
+    
+    if (len(category_props) == 0):
+        return []
     
     time_slots = []
     current_date = start_date
@@ -74,7 +78,7 @@ def cost_month_graph(all_categories):
             slot_start_date = time_slot[0]
             slot_end_date = time_slot[1]
             id = int(id)
-            print(id, category)
+            # print(id, category)
             slot_time = timeOfCategoryInRange(slot_start_date, slot_end_date, category["category_time_map"])
             if slot_time == 0:
                 continue
@@ -93,9 +97,9 @@ def cost_month_graph(all_categories):
 
     data = []
     for i in range(len(time_slots)):
-        print(time_slots[i], "->", slot_cost[i])
+        # print(time_slots[i], "->", slot_cost[i])
         data.append([time_slots[i][0], time_slots[i][1], slot_cost[i]])
-    print(data)
+    # print(data)
     return data
 
     

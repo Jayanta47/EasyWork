@@ -28,6 +28,7 @@ def getCategoryData(request, cat_id):
             "expected_time": category['expected_time'],
             "allocated_budget": category['allocated_budget'],
             "man_hour_per_week": category['man_hour_per_week'],
+            "allocated_budget": category['allocated_budget'],
             "allocated_members": all_members,
         }
 
@@ -72,7 +73,7 @@ def getAllCategoryWithTaskName(request, project_id):
     for category in all_categories:
         print(category)
         all_tasks = getAllTasksOfCategory(cat_id=category['id'])
-        print("tasks", all_tasks)
+        # print("tasks", all_tasks)
 
         category_data = {
             "id": category["id"],
@@ -84,7 +85,7 @@ def getAllCategoryWithTaskName(request, project_id):
     # print(data)
 
     uncategorised_tasks = getUnCategorisedTasks(project_id) # returns list of dict
-    
+
     category_data = {
         "id": 0,
         "title": "Unlisted",
@@ -149,12 +150,12 @@ class UpdateFuncCategory(generics.UpdateAPIView):
 @api_view(["POST"])
 def getCostMonthGraph(request):
     data = request.data
-
-    if data["all"]:
-        all_categories = FuncCategory.objects.all().values()
+    project_id = data['project_id']
+    if data["all"]==True:
+        all_categories = getCategoriesUnderProject(project_id)
     else:
         all_categories = FuncCategory.objects.filter(id=data["category_id"]).values()
-
+    print(all_categories)
     data = cost_month_graph(all_categories)
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
 
