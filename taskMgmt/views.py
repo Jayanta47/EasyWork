@@ -170,10 +170,16 @@ def getDependencyGraph(request):
     project_id = request.data['project_id']
     task_id = request.data['task_id']
 
+    title = 'title'
+
     if task_id == -1:
         task_list = getTasksList(project_id=project_id)
+        project = Project.objects.filter(id=project_id).values()[0]
+        title = project["title"]
     else:
         task_list = getSubTaskList(task_id)
+        task = Task.objects.filter(id=task_id).values()[0]
+        title = task["title"]
 
     if len(task_list) == 0:
         return Response({"success": True, "data": []}, status=status.HTTP_200_OK)
@@ -190,10 +196,13 @@ def getDependencyGraph(request):
         "du": duration_list
     }
     img_name = generateDependencyGraph(ancestry)
-
+    maplist = []
+    for key, value in map.items():
+        maplist.append(value)
     data = {
-        "task_map": map,
-        "image_name": img_name 
+        "task_map": maplist,
+        "image_name": img_name,
+        "title": title
     }
 
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)

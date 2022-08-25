@@ -62,7 +62,7 @@ def getPredecessorTaskList(task_id_list):
     return dependency_list
 
 
-# get the duration of a task given its id 
+# get the duration of a task given its id
 def getTaskDuration(task_id):
     task = Task.objects.filter(id=task_id).values("start_time", "end_time").first()
     return max(0, (task["end_time"] - task["start_time"]).days)
@@ -86,11 +86,11 @@ def getPredGraphList(task_id_list):
             j = task_id%26
             task_id = task_id // 26
             name+=chr(ord('A')+j-1)
-        
+
         title = getTaskTitle(task_id_list[i])
         ac_list.append(name)
         map[str(task_id_list[i])] = [name, title]
-    
+
     # print(map)
 
     for task_id in task_id_list:
@@ -98,13 +98,13 @@ def getPredGraphList(task_id_list):
             dependent_on_task=task_id).values()
         dependency_str = ""
         if len(predecessor_tasks) == 0:
-            dependency_str = "-" 
+            dependency_str = "-"
         else:
             for predecessor_task in predecessor_tasks:
                 predecessor_id = predecessor_task['parent_task_id']
                 if predecessor_id in task_id_list:
                     dependency_str+=chr(ord('A')+predecessor_id-1)
-                
+
         pred_list.append(dependency_str)
         duration_list.append(getTaskDuration(task_id))
 
@@ -158,8 +158,11 @@ def getAllMembersOfCategory(cat_id):
     for task in tasks:
         all_user_maps = User_Task_Map.objects.filter(
             task_id=task['id']).values()
-
+        wage = 0
+        weekly_effort = 0
         for m in all_user_maps:
+            wage = max(m['wage'], wage)
+            weekly_effort = max(m['weekly_effort'], weekly_effort)
             user = User.objects.filter(id=m["user_id_id"]).values()[0]
             job_id = user['job_id']
             job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
@@ -167,14 +170,16 @@ def getAllMembersOfCategory(cat_id):
                 all_categories[str(job)]["count"] = all_categories[str(job)]["count"] + 1
                 all_categories[str(job)]["users"].append(user["id"])
             else:
-                all_categories[str(job)]= {"count": 1, "users": [ user["id"] ]}
+                all_categories[str(job)]= {"count": 1, "users": [user["id"]], "wage":wage, "weekly_effort": weekly_effort}
 
     final_data = []
     for key, value in all_categories.items():
         d = {
             "post": key,
             "count": value["count"],
-            "users": value["users"]
+            "users": value["users"],
+            "wage": value["wage"],
+            "weekly_effort": value["weekly_effort"],
         }
         final_data.append(d)
 
@@ -256,7 +261,7 @@ def totalDurationOfTasks(all_tasks):
             (task['id'], (start_date-curr_time).days, (end_date-curr_time).days))
 
     task_start_end_list = sorted(task_start_end_list, key=lambda x: x[2])
-    
+
     # print(task_start_end_list)
     total_duration = 0
 
@@ -291,8 +296,8 @@ def timeOfCategoryInRange(start_date, end_date, time_map):
         if days < 0:
             total_time += 0
         else:
-            total_time += days 
-    
+            total_time += days
+
     return total_time
 
 def getTaskListTimeMap(task_list):
@@ -313,7 +318,7 @@ def getTaskListTimeMap(task_list):
 
     current_segment_start_date = task_start_end_list[0][1]
     current_segment_end_date = task_start_end_list[0][2]
-    
+
     for x in task_start_end_list:
         end_date = x[2]
         start_date = x[1]
@@ -385,7 +390,7 @@ def generateDependencyGraph(ancestry):
 
     level = [None] * (len(graph))
 
-    
+
     # BFS
     s = start.copy()
     visited = [False] * (len(graph))
@@ -504,6 +509,7 @@ def generateDependencyGraph(ancestry):
     return fig_name
 
 
+
 def getUserTaskList(project_id, user_id):
     all_user_tasks = User_Task_Map.objects.filter(user_id=user_id).values()
     selected_tasks = []
@@ -529,6 +535,16 @@ def getUserSubTaskList(task_id, user_id):
                 selected_tasks.append(task)
 
     return selected_tasks
+
+def updateTaskMapForUserAndCat(category_id, user_id, effort, wage):
+    task_in_cat_list = Task.objects.filter(category_id=category_id).values()
+    user_task_list = []
+    for task in task_in_cat_list:
+        task_id = task['id']
+        user_task_map = User_Task_Map.objects.filter(task_id=task_id, user_id=user_id).values('id')
+        if len(user_task_map) > 0:
+            user_task_map_id = user_task_map[0]['id']
+            User_Task_Map.objects.filter(id=user_task_map_id).update(weekly_effort=effort, wage=wage)
 
 # error in implementation
 
