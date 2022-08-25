@@ -10,5 +10,6 @@ urlpatterns = [
     path('editCategories/', views.editCategories ),
     path('updateFuncCat/<int:pk>/', views.UpdateFuncCategory.as_view() ), #use patch here
     path('getCostMonthGraph/', views.getCostMonthGraph ),
-    
+    path('updateUserTaskMap/', views.updateUserTaskMap ),
+
 ]

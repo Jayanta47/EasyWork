@@ -13,7 +13,7 @@ from costEstimation.utils import cost_month_graph
 
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
-from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap
+from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap, updateTaskMapForUserAndCat
 from .serializers import FuncCategorySerializer
 
 
@@ -158,6 +158,20 @@ def getCostMonthGraph(request):
     print(all_categories)
     data = cost_month_graph(all_categories)
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def updateUserTaskMap(request):
+    data = request.data
+    category_id = data["category_id"]
+    user_list = data["users"]
+
+    for user in user_list:
+        updateTaskMapForUserAndCat(category_id, user['user_id'], user['effort'], user['wage'])
+
+    # print(data)
+
+    return Response({"success": True}, status=status.HTTP_200_OK)
 
 # class DeleteFuncCategory(generics.DestroyAPIView):
 #     queryset = FuncCategory.objects.all()
