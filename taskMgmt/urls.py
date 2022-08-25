@@ -13,4 +13,5 @@ urlpatterns = [
     path('addDependency/', views.DependencyHandler.as_view() ),
     path('deleteDependency/<int:dependency_id>/', views.deleteDependency ),
     path('assignUser/', views.assignUser ),
+    path('getDependencyGraph/', views.getDependencyGraph ),
 ]
