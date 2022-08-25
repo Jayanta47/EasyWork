@@ -165,3 +165,38 @@ def assignUser(request):
     return Response({"success": True}, status=status.HTTP_200_OK)
 
 
+@api_view(["POST"])
+def getDependencyGraph(request):
+    project_id = request.data['project_id']
+    task_id = request.data['task_id']
+
+    if task_id == -1:
+        task_list = getTasksList(project_id=project_id)
+    else:
+        task_list = getSubTaskList(task_id)
+
+    if len(task_list) == 0:
+        return Response({"success": True, "data": []}, status=status.HTTP_200_OK)
+    ancestor_list = []
+    predecessor_list = []
+    duration_list = []
+    task_id_list = [task['id'] for task in task_list]
+    map, task_id_list, ancestor_list, predecessor_list, duration_list = getPredGraphList(task_id_list)
+    # print(task_id_list, ancestor_list, predecessor_list, duration_list)
+
+    ancestry = {
+        "ac": ancestor_list,
+        "pr": predecessor_list,
+        "du": duration_list
+    }
+    img_name = generateDependencyGraph(ancestry)
+
+    data = {
+        "task_map": map,
+        "image_name": img_name 
+    }
+
+    return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
+
+        
+
