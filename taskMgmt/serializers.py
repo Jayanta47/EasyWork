@@ -24,10 +24,11 @@ class MilestonesSerializer(serializers.ModelSerializer):
 class User_TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Task_Map
-        fields = [
-            'id',
-            'user_id',
-            'task_id',
-            'assign_date',
-            'duration',
-        ]
+        # fields = [
+        #     'id',
+        #     'user_id',
+        #     'task_id',
+        #     'assign_date',
+        #     'duration',
+        # ]
+        fields = "__all__"
