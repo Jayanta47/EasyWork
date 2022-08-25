@@ -198,5 +198,17 @@ def getDependencyGraph(request):
 
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)
 
-        
+@api_view(["POST"])
+def getTaskPriority(request):
+    project_id = request.data['project_id']
+    task_id = request.data['task_id']
+    user_id = request.data['user_id']
+
+    if task_id == -1:
+        task_list = getUserTaskList(project_id, user_id)
+    else:
+        task_list = getUserSubTaskList(task_id, user_id)
+
+    if len(task_list) == 0:
+        return Response({"success": True, "data": []}, status=status.HTTP_200_OK)
 
