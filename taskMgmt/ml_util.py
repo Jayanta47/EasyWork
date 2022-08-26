@@ -16,7 +16,7 @@ def getDataFromPriorityClass(url, json_data):
     url = BASE_ML_URL + url 
     resp = requests.post(url, json=json_data)
 
-    return resp.text
+    return resp.json()
 
 def getPriorityOfTask(task_id):
     task = Task.objects.filter(id=task_id).values().first()
@@ -30,5 +30,5 @@ def getPriorityOfTask(task_id):
     }
 
     text = getDataFromPriorityClass("priority_classifier/predict/", data)
-
+    # print(text, type(text))
     return text["label"], text["point"]
