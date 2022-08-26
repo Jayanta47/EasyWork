@@ -10,7 +10,7 @@ from datetime import date, timedelta
 #     "complexity": 1
 # }
 
-BASE_ML_URL = "127.0.0.1:8080/api/"
+BASE_ML_URL = "http://127.0.0.1:8080/api/"
 
 def getDataFromPriorityClass(url, json_data):
     url = BASE_ML_URL + url 
@@ -25,9 +25,10 @@ def getPriorityOfTask(task_id):
         "days_to_start": max((task["start_time"]-curr_time).days, 0),
         "days_to_end": max((task["end_time"]-curr_time).days, 0),
         "dependency": getDependencyOfTask(task["id"]),
-        "complexity": 1
+        "complexity": 1,
+        "on_critical_path": 1
     }
 
-    text = getDataFromPriorityClass("priority_classifier/predict/")
+    text = getDataFromPriorityClass("priority_classifier/predict/", data)
 
     return text["label"], text["point"]

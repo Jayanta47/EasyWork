@@ -52,4 +52,41 @@ def calculateExponent(level_list):
     sum += TEAM[level_list[3]]
     sum += PMAT[level_list[4]]
 
-    return 0.91 + 0.01 * sum
+    return 1.01 + 0.01 * sum
+
+
+def calculateEffortMultipliers(level_dict):
+    EM = 1.0
+
+    a = np.array([
+        RELY[level_dict["RELY_level"]],
+        DATA[level_dict["DATA_level"]],
+        CPLX[level_dict["CPLX_level"]],
+        RUSE[level_dict["RUSE_level"]],
+        DOCU[level_dict["DOCU_level"]],
+
+        TIME[level_dict["TIME_level"]],
+        STOR[level_dict["STOR_level"]],
+        PVOL[level_dict["PVOL_level"]],
+
+        ACAP[level_dict["ACAP_level"]],
+        PCAP[level_dict["PCAP_level"]],
+        PCON[level_dict["PCON_level"]],
+        APEX[level_dict["APEX_level"]],
+        PLEX[level_dict["PLEX_level"]],
+        LTEX[level_dict["LTEX_level"]],
+
+        TOOL[level_dict["TOOL_level"]],
+        SITE[level_dict["SITE_level"]],
+        SCED[level_dict["SCED_level"]],
+
+    ])
+
+    return a.prod()
+
+
+def calculateEffort(scale_factor_list, effortM_level_dict, SLOC):
+    return 2.94 * ((SLOC)**calculateExponent(scale_factor_list)) * calculateEffortMultipliers(effortM_level_dict)
+
+
+
