@@ -546,6 +546,9 @@ def updateTaskMapForUserAndCat(category_id, user_id, effort, wage):
             user_task_map_id = user_task_map[0]['id']
             User_Task_Map.objects.filter(id=user_task_map_id).update(weekly_effort=effort, wage=wage)
 
+
+def getDependencyOfTask(task_id):
+    return Dependency.objects.filter(parent_task__id=task_id).count()
 # error in implementation
 
 

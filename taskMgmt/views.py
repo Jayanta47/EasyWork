@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from projectAndTasks.models import Project, Task, User_Project_Map
+from taskMgmt.ml_util import getPriorityOfTask
 from taskMgmt.serializers import DependencySerializer, MilestonesSerializer, User_TaskSerializer
 
 from .utils import *
@@ -221,3 +222,17 @@ def getTaskPriority(request):
     if len(task_list) == 0:
         return Response({"success": True, "data": []}, status=status.HTTP_200_OK)
 
+    priority_list = []
+    for task in task_list:
+        label, point = getPriorityOfTask(task['id'])
+        d = {
+            "task_id": task['id'],
+            "priority": label,
+            "priority_point": point,
+            "title": task["title"]
+        }
+        priority_list.append(d)
+
+    sorted(priority_list, key=lambda x: x["priority_point"])
+
+    return Response({"priority_list": priority_list}, status=status.HTTP_200_OK)
