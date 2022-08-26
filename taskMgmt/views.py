@@ -229,10 +229,13 @@ def getTaskPriority(request):
             "task_id": task['id'],
             "priority": label,
             "priority_point": point,
-            "title": task["title"]
+            "title": task["title"],
+            "end_time": task["end_time"],
         }
         priority_list.append(d)
 
-    sorted(priority_list, key=lambda x: x["priority_point"])
+    priority_list = sorted(priority_list, key=lambda x: x["priority_point"], reverse=True)
+    
+    
 
     return Response({"priority_list": priority_list}, status=status.HTTP_200_OK)
