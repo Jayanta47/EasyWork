@@ -176,3 +176,7 @@ def updateUserTaskMap(request):
 # class DeleteFuncCategory(generics.DestroyAPIView):
 #     queryset = FuncCategory.objects.all()
 #     serializer_class = FuncCategorySerializer
+
+@api_view(["POST"])
+def calculateCostAdvanced(request):
+    pass

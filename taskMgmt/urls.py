@@ -14,4 +14,5 @@ urlpatterns = [
     path('deleteDependency/<int:dependency_id>/', views.deleteDependency ),
     path('assignUser/', views.assignUser ),
     path('getDependencyGraph/', views.getDependencyGraph ),
+    path('getTaskPriority/', views.getTaskPriority),
 ]
