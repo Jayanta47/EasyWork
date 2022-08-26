@@ -515,7 +515,7 @@ def getUserTaskList(project_id, user_id):
     selected_tasks = []
     for ut_map in all_user_tasks:
         task_id = ut_map['task_id_id']
-        task = Task.objects.filter(task_id=task_id, project_id=project_id).values()
+        task = Task.objects.filter(id=task_id, project_id=project_id).values()
         if len(task) != 0:
             selected_tasks.append(task[0])
 
