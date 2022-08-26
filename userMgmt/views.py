@@ -98,3 +98,14 @@ def getSelectedUsers(request):
         all_user_data.append(user_data)
 
     return Response({"success": True, "members": all_user_data}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getUserInfo(request, user_id):
+    user = User.objects.get(id=user_id)
+
+    userSerializer = UserSerializer(user)
+
+    if userSerializer.is_valid():
+        return Response(userSerializer.data)
+    else:
+        return Response({"success":False}, status=status.HTTP_204_NO_CONTENT)
