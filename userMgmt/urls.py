@@ -8,5 +8,6 @@ urlpatterns = [
     path('getUsersUnderDesignation/', views.getUsersUnderDesignation ),
     path('addUser/', views.addUser ),
     path('modifyUser/', views.modifyUser),
-    path('getSelectedUsers/', views.getSelectedUsers )
+    path('getSelectedUsers/', views.getSelectedUsers ),
+    path('getUserInfo/<int:user_id>/', views.getUserInfo ),
 ]
