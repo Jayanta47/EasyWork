@@ -108,7 +108,7 @@ def getCommentOnTask(request):
         user_name = User.objects.filter(id=user_id).values('first_name', 'last_name').first()
         # print(user_name)
         comment.data['user_name'] = user_name
-        comments_list.append({"comment": comment.data, "user": user_name["first_name"]+user_name["last_name"]})
+        comments_list.append({"comment": comment.data, "user": user_name["first_name"]+" "+ user_name["last_name"]})
 
     return Response({"success": True, "comments_list": comments_list},
                     status=status.HTTP_200_OK)
