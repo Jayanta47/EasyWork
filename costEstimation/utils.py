@@ -6,11 +6,11 @@ from .models import FuncCategory
 import scipy.stats
 
 def estimateEffort(loc, task_level, months):
-    if task_level == "easy":
+    if task_level == "easy" or task_level == "E":
         p = 2000
-    elif task_level == "medium":
+    elif task_level == "medium" or task_level == "M":
         p = 10000
-    elif task_level == "hard":
+    elif task_level == "hard" or task_level == "H":
         p = 20000
     else:
         raise Exception("invalid task difficulty")

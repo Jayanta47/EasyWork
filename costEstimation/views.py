@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import render
 
 # Create your views here.
@@ -12,10 +13,11 @@ from costEstimation.utils import cost_month_graph
 # from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
-from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
+from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory, totalDaysInCategory
 from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap, updateTaskMapForUserAndCat
 from taskMgmt.utils import getAllMembersOfProject
 from .serializers import FuncCategorySerializer
+from costEstimation.utils import estimateEffort
 
 from .cocomoii import *
 
@@ -287,3 +289,51 @@ def calculateCostAdvanced(request):
 
 
     return Response({"success": True, "effort": effort, "time": time, "devCost": devCost}, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def calculateCost(request):
+    data = request.data
+    category_id = data["category_id"]
+    category = FuncCategory.objects.filter(id=category_id).values()[0]
+
+    loc = category["loc"]
+    loc_per_pm = category["loc_per_pm"]
+    cost_per_loc = category["cost_per_loc"]
+    task_level = category["difficulty"]
+
+    estimated_cost_using_cost = 0
+    estimated_cost_using_loc_per_pm = 0
+    estimated_time = totalDaysInCategory(category_id)
+
+    if loc > 0:
+        estimated_cost_using_cost = loc * cost_per_loc
+    elif loc_per_pm > 0:
+        all_members = getAllMembersOfCategory(cat_id=category_id)
+        person = 0
+        for member in all_members:
+            person = person + member.count
+        
+        month = estimated_time / 30
+        effort = estimateEffort(loc, task_level, month) #pm
+        loc = effort * loc_per_pm
+        estimated_cost_using_loc_per_pm = loc * cost_per_loc
+    
+    estimated_cost = max(estimated_cost_using_cost, estimated_cost_using_loc_per_pm)
+
+    data = {"expected_time": estimated_time, "estimated_cost": estimated_cost}
+
+    funcCat = FuncCategory.objects.get(id=category_id)
+
+    serializer = FuncCategorySerializer(funcCat, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+    else:
+        return Response({"success": False}, status = status.HTTP_400_BAD_REQUEST)
+
+
+
+    
+
