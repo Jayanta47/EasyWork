@@ -8,9 +8,10 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
 
-from projectAndTasks.serializers import ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
+from projectAndTasks.serializers import NotificationSerializer, ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
-from .models import Project, Task, TaskComments, TaskHierarchy, User_Project_Map
+from taskMgmt import serializers
+from .models import Notification, Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 from userMgmt.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -172,3 +173,38 @@ class UpdateProject(generics.UpdateAPIView):
 class DeleteProject(generics.DestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+
+class NotificationHandler(APIView):
+    def post(self, request):
+        serializer = NotificationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, receiver_id):
+        print(receiver_id)
+        all_notifications = Notification.objects.filter(sender__id = receiver_id)
+        data = []
+        for notification in all_notifications:
+            serializer = NotificationSerializer(notification)
+            task = Task.objects.filter(id = serializer.data['task']).values().first()
+            sender = User.objects.get(id=serializer.data["sender"])
+            project = Project.objects.filter(id=task["id"]).values().first()
+            d = {
+                "task_id": serializer.data["task"],
+                "task_title": task["title"],
+                "user_id": serializer.data["sender"],
+                "user_name": sender.first_name + " " + sender.last_name,
+                "project_id": project["id"],
+                "project_title": project["title"],
+                "date_of_notification": serializer.data["notification_time"],
+                "notification_text": serializer.data["text"]
+            }
+
+            data.append(d)
+
+        return Response({"data": data}, status=status.HTTP_200_OK)

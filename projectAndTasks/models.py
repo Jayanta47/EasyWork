@@ -195,3 +195,36 @@ class Project_Category_Map (models.Model):
         FuncCategory,
         on_delete=models.CASCADE
     )
+
+
+class Notification (models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
+
+    task = models.ForeignKey(
+        Task, 
+        on_delete=models.CASCADE,
+        null=True
+    )
+
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="sender"
+    )
+
+    receiver = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="receiver"
+    )
+
+    text = models.CharField(
+        max_length=255
+    )
+
+    notification_time = models.DateTimeField(
+        auto_now_add=True 
+    )
+
