@@ -25,16 +25,17 @@ def getCategoryData(request, cat_id):
     if len(category) > 0:
         category = category[0]
         all_members = getAllMembersOfCategory(cat_id=cat_id)
-        d = {
-            "category_name": category['title'],
-            "expected_time": category['expected_time'],
-            "allocated_budget": category['allocated_budget'],
-            "man_hour_per_week": category['man_hour_per_week'],
-            "allocated_budget": category['allocated_budget'],
-            "allocated_members": all_members,
-        }
+        category["allocated_members"] = all_members
+        # d = {
+        #     "category_name": category['title'],
+        #     "expected_time": category['expected_time'],
+        #     "allocated_budget": category['allocated_budget'],
+        #     "man_hour_per_week": category['man_hour_per_week'],
+        #     "allocated_budget": category['allocated_budget'],
+        #     "allocated_members": all_members,
+        # }
 
-        return Response({"success": True, "data": d},
+        return Response({"success": True, "data": category},
                         status=status.HTTP_200_OK)
     else:
         return Response({"success": False},
