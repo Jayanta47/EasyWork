@@ -83,10 +83,12 @@ class TaskHierarchyHandler(APIView):
 
 class TaskCommentHandler(APIView):
     def post(self, request):
+        print(request.data)
         serializer = TaskCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"success": True}, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def get(self, request, task_id, *args, **kwargs):

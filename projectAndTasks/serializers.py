@@ -71,7 +71,7 @@ class TaskHierarchySerializer(serializers.ModelSerializer):
 
 
 class TaskCommentSerializer(serializers.ModelSerializer):
-    comment_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    # comment_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     class Meta:
         model = TaskComments
         fields = '__all__'

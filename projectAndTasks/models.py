@@ -177,7 +177,7 @@ class TaskComments (models.Model):
     )
 
     comment_time = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
 
