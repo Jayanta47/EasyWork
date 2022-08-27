@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from projectAndTasks.models import Task
 from userMgmt.models import User
@@ -74,12 +75,14 @@ class Milestones(models.Model):
 
     title = models.CharField(
         max_length=255,
-        default="milestone title"
+        default="milestone title",
+        null=True
     )
 
     description = models.CharField(
         max_length=255,
-        default="milestone description"
+        default="milestone description",
+        null=True,
     )
 
     status = models.CharField(
