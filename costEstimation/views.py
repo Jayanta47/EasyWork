@@ -197,11 +197,11 @@ def calculateCostAdvanced(request):
     # teamCohesion - TEAM 
 
     scale_factor_list = [
-        data["precedentedness"],
-        data["developmentFlexibility"],
-        data["architectureRiskResolution"],
-        data["teamCohesion"],
-        data["processMaturity"]
+        int(data["precedentedness"]),
+        int(data["developmentFlexibility"]),
+        int(data["architectureRiskResolution"]),
+        int(data["teamCohesion"]),
+        int(data["processMaturity"])
     ]
 
     # modifiedAssessmentAndAssimilation - 
@@ -235,27 +235,27 @@ def calculateCostAdvanced(request):
     # useOfSoftwareTools - TOOL
 
     effortM_level_dict = {
-        "RELY_level": data["requiredSoftwareReliability"],
-        "DATA_level": data["dataBaseSize"],
-        "CPLX_level": data["productComplexity"],
-        "RUSE_level": data["developedForReusability"],
-        "DOCU_level": data["documentationMatchToLifecycleNeeds"],
-        "TIME_level": data["timeConstraint"],
-        "STOR_level": data["storageConstraint"],
-        "PVOL_level": data["platformVolatility"],
-        "ACAP_level": data["analystCapability"],
-        "PCAP_level": data["programmerCapability"],
-        "PCON_level": data["personnelContinuity"],
-        "APEX_level": data["applicationExperience"],
-        "PLEX_level": data["platformExperience"],
-        "LTEX_level": data["languageAndToolsetExperience"],
-        "TOOL_level": data["useOfSoftwareTools"],
-        "SITE_level": data["multisiteDevelopment"],
-        "SCED_level": data["requiredDevelopmentSchedule"]
+        "RELY_level": int(data["requiredSoftwareReliability"]),
+        "DATA_level": int(data["dataBaseSize"]),
+        "CPLX_level": int(data["productComplexity"]),
+        "RUSE_level": int(data["developedForReusability"]),
+        "DOCU_level": int(data["documentationMatchToLifecycleNeeds"]),
+        "TIME_level": int(data["timeConstraint"]),
+        "STOR_level": int(data["storageConstraint"]),
+        "PVOL_level": int(data["platformVolatility"]),
+        "ACAP_level": int(data["analystCapability"]),
+        "PCAP_level": int(data["programmerCapability"]),
+        "PCON_level": int(data["personnelContinuity"]),
+        "APEX_level": int(data["applicationExperience"]),
+        "PLEX_level": int(data["platformExperience"]),
+        "LTEX_level": int(data["languageAndToolsetExperience"]),
+        "TOOL_level": int(data["useOfSoftwareTools"]),
+        "SITE_level": int(data["multisiteDevelopment"]),
+        "SCED_level": int(data["requiredDevelopmentSchedule"]
     }
 
-    SLOC = data["newSLOC"] + data["reusedSLOC"] * (data["reusedIntegrationRequired"]*0.8 + data["reusedAssessmentAndAssimilation"])
-    SLOC += data["modifiedSLOC"]*(0.2+data["modifiedDesignModifed"]*0.5+data["modifiedCodeModified"]*0.6+data["modifiedSoftwareUnderstanding"]*0.1+data["modifiedUnfamiliarity"]*0.1)
+    SLOC = int(data["newSLOC"]) + int(data["reusedSLOC"]) * (int(data["reusedIntegrationRequired"])*0.8 + int(data["reusedAssessmentAndAssimilation"]))
+    SLOC += int(data["modifiedSLOC"])*(0.2+int(data["modifiedDesignModifed"])*0.5+int(data["modifiedCodeModified"])*0.6+int(data["modifiedSoftwareUnderstanding"])*0.1+int(data["modifiedUnfamiliarity"]*0.1))
 
     effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC)
     time = calculateTime(effort=effort)
