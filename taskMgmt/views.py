@@ -15,6 +15,8 @@ from taskMgmt.serializers import DependencySerializer, MilestonesSerializer, Use
 from .utils import *
 from .models import Dependency, Milestones, User_Task_Map
 
+from rest_framework import generics
+
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 
@@ -245,3 +247,30 @@ def getTaskPriority(request):
     
 
     return Response({"priority_list": priority_list}, status=status.HTTP_200_OK)
+
+
+class UpdateMilestone(generics.UpdateAPIView):
+    queryset = Milestones.objects.all()
+
+    serializer_class = MilestonesSerializer
+
+class DeleteMilestone(generics.DestroyAPIView):
+    queryset = Milestones.objects.all()
+    serializer_class = MilestonesSerializer
+
+class MilestoneHandler(APIView):
+
+    def post(self, request):
+        serializer = MilestonesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, milestone_id, *args, **kwargs):
+        milestone = Milestones.objects.get(id=milestone_id)
+        # for p in project_data:
+        #     print(p)
+        serializer = MilestonesSerializer(milestone)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

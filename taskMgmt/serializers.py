@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 
 from taskMgmt.models import Dependency, Milestones, User_Task_Map
@@ -31,4 +32,10 @@ class User_TaskSerializer(serializers.ModelSerializer):
         #     'assign_date',
         #     'duration',
         # ]
+        fields = "__all__"
+        
+
+class MilestoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Milestones
         fields = "__all__"
