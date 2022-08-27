@@ -14,14 +14,6 @@ class DependencySerializer(serializers.ModelSerializer):
         ]
 
 
-class MilestonesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Milestones
-        fields = [
-            'id',
-        ]
-
-
 class User_TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Task_Map
@@ -33,9 +25,9 @@ class User_TaskSerializer(serializers.ModelSerializer):
         #     'duration',
         # ]
         fields = "__all__"
-        
 
-class MilestoneSerializer(serializers.ModelSerializer):
+
+class MilestonesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Milestones
         fields = "__all__"
