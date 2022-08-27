@@ -11,7 +11,7 @@ from rest_framework import generics
 from projectAndTasks.serializers import ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
 from .models import Project, Task, TaskComments, TaskHierarchy, User_Project_Map
-
+from userMgmt.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -106,7 +106,11 @@ def getCommentOnTask(request):
 
     for comment in comments:
         comment = TaskCommentSerializer(comment)
-        comments_list.append(comment.data)
+        user_id = comment.data['user']
+        user_name = User.objects.filter(id=user_id).values('first_name', 'last_name').first()
+        # print(user_name)
+        comment.data['user_name'] = user_name
+        comments_list.append({"comment": comment.data, "user": user_name["first_name"]+" "+ user_name["last_name"]})
 
     return Response({"success": True, "comments_list": comments_list},
                     status=status.HTTP_200_OK)
