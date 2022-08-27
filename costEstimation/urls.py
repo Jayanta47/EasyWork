@@ -12,6 +12,6 @@ urlpatterns = [
     path('getCostMonthGraph/', views.getCostMonthGraph ),
     path('updateUserTaskMap/', views.updateUserTaskMap ),
     path('calculateCostAdvanced/', views.calculateCostAdvanced ),
-    # path('calculateCost/', views.calculateCost ),
+    path('calculateCost/', views.calculateCost ),
 
 ]
