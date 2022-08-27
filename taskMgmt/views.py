@@ -276,3 +276,19 @@ class MilestoneHandler(APIView):
         serializer = MilestonesSerializer(milestone)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def getAllMilestonesOfProj(request, project_id):
+    all_tasks = Task.objects.filter(project_id = project_id).values("id")
+
+    data = []
+    for task in all_tasks:
+        all_milestones = Milestones.objects.filter(task_id = task["id"])
+
+        for milestone in all_milestones:
+            serializer = MilestonesSerializer(milestone)
+
+            data.append(serializer.data)
+
+    return Response({"data": data}, status=status.HTTP_200_OK) 

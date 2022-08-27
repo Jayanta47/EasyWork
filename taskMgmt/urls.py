@@ -19,4 +19,5 @@ urlpatterns = [
     path('deleteMilestone/<int:pk>/', views.DeleteMilestone.as_view() ), # use DELETE here
     path('updateMilestone/<int:pk>/', views.UpdateMilestone.as_view() ), # use patch here
     path('getMilestone/<int:milestone_id>/', views.MilestoneHandler.as_view()),
+    path('getAllMilestonesOfProj/<int:project_id>/', views.getAllMilestonesOfProj ),
 ]
