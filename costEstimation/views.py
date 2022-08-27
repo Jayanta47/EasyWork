@@ -251,7 +251,7 @@ def calculateCostAdvanced(request):
         "LTEX_level": int(data["languageAndToolsetExperience"]),
         "TOOL_level": int(data["useOfSoftwareTools"]),
         "SITE_level": int(data["multisiteDevelopment"]),
-        "SCED_level": int(data["requiredDevelopmentSchedule"]
+        "SCED_level": int(data["requiredDevelopmentSchedule"]),
     }
 
     SLOC = int(data["newSLOC"]) + int(data["reusedSLOC"]) * (int(data["reusedIntegrationRequired"])*0.8 + int(data["reusedAssessmentAndAssimilation"]))
