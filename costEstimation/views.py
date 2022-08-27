@@ -14,6 +14,7 @@ from costEstimation.utils import cost_month_graph
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory
 from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap, updateTaskMapForUserAndCat
+from taskMgmt.utils import getAllMembersOfProject
 from .serializers import FuncCategorySerializer
 
 from .cocomoii import *
@@ -25,6 +26,28 @@ def getCategoryData(request, cat_id):
     if len(category) > 0:
         category = category[0]
         all_members = getAllMembersOfCategory(cat_id=cat_id)
+        category["allocated_members"] = all_members
+        # d = {
+        #     "category_name": category['title'],
+        #     "expected_time": category['expected_time'],
+        #     "allocated_budget": category['allocated_budget'],
+        #     "man_hour_per_week": category['man_hour_per_week'],
+        #     "allocated_budget": category['allocated_budget'],
+        #     "allocated_members": all_members,
+        # }
+
+        return Response({"success": True, "data": category},
+                        status=status.HTTP_200_OK)
+    else:
+        return Response({"success": False},
+                        status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["GET"])
+def getProjectUserData(request, project_id):
+    # category = FuncCategory.objects.filter(id=cat_id).values()
+    if True:
+        category = category[0]
+        all_members = getAllMembersOfProject(project_id=project_id)
         category["allocated_members"] = all_members
         # d = {
         #     "category_name": category['title'],
@@ -256,9 +279,9 @@ def calculateCostAdvanced(request):
 
     SLOC = int(data["newSLOC"]) + int(data["reusedSLOC"]) * (float(data["reusedIntegrationRequired"])*0.5*0.01 + float(data["reusedAssessmentAndAssimilation"])*0.15*0.01)
     SLOC += int(data["modifiedSLOC"])*(0.2+float(data["modifiedDesignModifed"])*0.1*0.01+float(data["modifiedCodeModified"])*0.4*0.01+float(data["modifiedSoftwareUnderstanding"])*0.01*0.01+float(data["modifiedUnfamiliarity"])*0.1)
-    print(SLOC, scale_factor_list, effortM_level_dict)
+    # print(SLOC, scale_factor_list, effortM_level_dict)
     effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC/1000)
-    print('Effort: ',effort, " SLOC:", SLOC)
+    # print('Effort: ',effort, " SLOC:", SLOC)
     time = calculateTime(effort=effort)
     devCost = calculateDevCost(effort, int(data["laborRate"]))
 

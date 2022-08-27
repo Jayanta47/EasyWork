@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from costEstimation import serializers
-
 from .serializers import DesignationSerializer, UserSerializer
 from projectAndTasks.models import User_Project_Map
 from taskMgmt.models import User_Task_Map
@@ -35,7 +33,7 @@ def getDesignation(request, id):
     serializer = DesignationSerializer(designation)
 
     return Response(serializer.data)
-    
+
 
 @api_view(["POST"])
 def getUsersUnderDesignation(request):

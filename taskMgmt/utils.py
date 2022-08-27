@@ -185,6 +185,40 @@ def getAllMembersOfCategory(cat_id):
 
     return final_data
 
+def getAllMembersOfProject(project_id):
+    tasks = Task.objects.filter(project_id=project_id).values()
+    all_categories = {}
+    for task in tasks:
+        all_user_maps = User_Task_Map.objects.filter(
+            task_id=task['id']).values()
+        wage = 0
+        weekly_effort = 0
+        for m in all_user_maps:
+            wage = max(m['wage'], wage)
+            weekly_effort = max(m['weekly_effort'], weekly_effort)
+            user = User.objects.filter(id=m["user_id_id"]).values()[0]
+            job_id = user['job_id']
+            job = Designation.objects.filter(id=job_id).values()[0]["job_name"]
+            if str(job) in all_categories:
+                all_categories[str(job)]["count"] = all_categories[str(job)]["count"] + 1
+                all_categories[str(job)]["users"].append(user["id"])
+            else:
+                all_categories[str(job)]= {"count": 1, "users": [user["id"]], "wage":wage, "weekly_effort": weekly_effort}
+
+    final_data = []
+    for key, value in all_categories.items():
+        d = {
+            "post": key,
+            "count": value["count"],
+            "users": value["users"],
+            "wage": value["wage"],
+            "weekly_effort": value["weekly_effort"],
+        }
+        final_data.append(d)
+
+
+    return final_data
+
 
 def getAllTasksOfCategory(cat_id):
     tasks = Task.objects.filter(category_id=cat_id).values()
