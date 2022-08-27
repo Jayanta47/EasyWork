@@ -13,6 +13,7 @@ urlpatterns = [
     path('addtaskparent/', views.TaskHierarchyHandler.as_view() ),
     path('deleteTask/<int:task_id>/', views.deleteTask ),
     path('deleteProject/<int:pk>/', views.DeleteProject.as_view() ), # use DELETE method
+    path('addNotification/', views.NotificationHandler.as_view() ),
     path('getNotification/<int:receiver_id>/', views.NotificationHandler.as_view()),
     # path('getProjectTreeStructure/<int:project_id>/', views.getProjectTreeStructure ), 
     
