@@ -10,4 +10,5 @@ urlpatterns = [
     path('modifyUser/', views.modifyUser),
     path('getSelectedUsers/', views.getSelectedUsers ),
     path('getUserInfo/<int:user_id>/', views.getUserInfo ),
+    path('get_Designation/<int:id>/', views.getDesignation ),
 ]

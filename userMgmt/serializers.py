@@ -1,7 +1,7 @@
 import imp
 from rest_framework import serializers
 
-from .models import User
+from .models import Designation, User
 
 class UserSerializer(serializers.ModelSerializer):
     # full_name = serializers.Field()
@@ -21,3 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
             "job",
             "joining_date",
         ]
+
+class DesignationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Designation
+        fields = ["__all__"]

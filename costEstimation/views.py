@@ -254,7 +254,8 @@ def calculateCostAdvanced(request):
         "SCED_level": data["requiredDevelopmentSchedule"]
     }
 
-    SLOC = data["newSLOC"]
+    SLOC = data["newSLOC"] + data["reusedSLOC"] * (data["reusedIntegrationRequired"]*0.8 + data["reusedAssessmentAndAssimilation"])
+    SLOC += data["modifiedSLOC"]*(0.2+data["modifiedDesignModifed"]*0.5+data["modifiedCodeModified"]*0.6+data["modifiedSoftwareUnderstanding"]*0.1+data["modifiedUnfamiliarity"]*0.1)
 
     effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC)
     time = calculateTime(effort=effort)
