@@ -106,8 +106,14 @@ def getTaskDetails(request):
 @api_view(["POST"])
 def getOnlyTasksForProject(request):
     project_id = request.data['project_id']
+    proj_title = Project.objects.filter(id=project_id).values()
+    if len(proj_title) > 0:
+        proj_title = proj_title[0]["title"]
+    else:
+        proj_title = "Not found"
+    print(proj_title)
     task_list = getTasksList(project_id=project_id)
-    return Response({"task_list": task_list}, status=status.HTTP_200_OK)
+    return Response({"task_list": task_list, "title": proj_title}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

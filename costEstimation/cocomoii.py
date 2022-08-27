@@ -86,7 +86,9 @@ def calculateEffortMultipliers(level_dict):
 
 
 def calculateEffort(scale_factor_list, effortM_level_dict, SLOC):
-    return 2.94 * ((SLOC)**calculateExponent(scale_factor_list)) * calculateEffortMultipliers(effortM_level_dict)
+    EM = calculateEffortMultipliers(effortM_level_dict)
+    # print("sloc, EM: ", SLOC, EM)
+    return 2.54 * ((SLOC)**calculateExponent(scale_factor_list)) * EM
 
 def calculateTime(effort):
     return 2.5 * (effort)**(0.32)

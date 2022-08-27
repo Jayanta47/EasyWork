@@ -254,11 +254,13 @@ def calculateCostAdvanced(request):
         "SCED_level": int(data["requiredDevelopmentSchedule"]),
     }
 
-    SLOC = int(data["newSLOC"]) + int(data["reusedSLOC"]) * (int(data["reusedIntegrationRequired"])*0.8 + int(data["reusedAssessmentAndAssimilation"]))
-    SLOC += int(data["modifiedSLOC"])*(0.2+int(data["modifiedDesignModifed"])*0.5+int(data["modifiedCodeModified"])*0.6+int(data["modifiedSoftwareUnderstanding"])*0.1+int(data["modifiedUnfamiliarity"]*0.1))
-
-    effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC)
+    SLOC = int(data["newSLOC"]) + int(data["reusedSLOC"]) * (float(data["reusedIntegrationRequired"])*0.5*0.01 + float(data["reusedAssessmentAndAssimilation"])*0.15*0.01)
+    SLOC += int(data["modifiedSLOC"])*(0.2+float(data["modifiedDesignModifed"])*0.1*0.01+float(data["modifiedCodeModified"])*0.4*0.01+float(data["modifiedSoftwareUnderstanding"])*0.01*0.01+float(data["modifiedUnfamiliarity"])*0.1)
+    print(SLOC, scale_factor_list, effortM_level_dict)
+    effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC/1000)
+    print('Effort: ',effort, " SLOC:", SLOC)
     time = calculateTime(effort=effort)
-    devCost = calculateDevCost
+    devCost = calculateDevCost(effort, int(data["laborRate"]))
+
 
     return Response({"success": True, "effort": effort, "time": time, "devCost": devCost}, status=status.HTTP_200_OK)
