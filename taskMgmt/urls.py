@@ -16,7 +16,7 @@ urlpatterns = [
     path('getDependencyGraph/', views.getDependencyGraph ),
     path('getTaskPriority/', views.getTaskPriority),
     path('addMilestone/', views.MilestoneHandler.as_view() ),
-    path('deleteMilestone/', views.DeleteMilestone.as_view() ), # use DELETE here
-    path('updateMilestone/<int:pk>', views.UpdateMilestone.as_view() ), # use patch here
+    path('deleteMilestone/<int:pk>/', views.DeleteMilestone.as_view() ), # use DELETE here
+    path('updateMilestone/<int:pk>/', views.UpdateMilestone.as_view() ), # use patch here
     path('getMilestone/<int:milestone_id>/', views.MilestoneHandler.as_view()),
 ]
