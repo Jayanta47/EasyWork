@@ -100,10 +100,11 @@ class TaskCommentHandler(APIView):
 def getCommentOnTask(request):
     task_id = request.data["task_id"]
     comments_list = []
-    comments = TaskComments.objects.filter(task=task_id).values()
+    comments = TaskComments.objects.filter(task=task_id)
 
     for comment in comments:
-        comments_list.append(comment)
+        comment = TaskCommentSerializer(comment)
+        comments_list.append(comment.data)
 
     return Response({"success": True, "comments_list": comments_list},
                     status=status.HTTP_200_OK)

@@ -165,9 +165,19 @@ class TaskComments (models.Model):
         on_delete=models.CASCADE
     )
 
+    user = models.ForeignKey(
+        User,
+        default=None,
+        on_delete=models.CASCADE
+    )
+
     comment = models.CharField(
         max_length=1000,
         null=False,
+    )
+
+    time = models.DateTimeField(
+        auto_now_add=True
     )
 
 

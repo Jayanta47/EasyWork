@@ -74,8 +74,4 @@ class TaskCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaskComments
-        fields = [ 
-            'id', 
-            'task',
-            'comment'
-        ]
+        fields = '__all__'
