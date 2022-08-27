@@ -15,4 +15,7 @@ urlpatterns = [
     path('assignUser/', views.assignUser ),
     path('getDependencyGraph/', views.getDependencyGraph ),
     path('getTaskPriority/', views.getTaskPriority),
+    path('addMilestone/', ),
+    path('deleteMilestone/', ),
+    path('updateMilestone/', )
 ]

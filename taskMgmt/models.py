@@ -57,6 +57,37 @@ class User_Task_Map (models.Model):
 
 
 class Milestones(models.Model):
+    STATUS_LIST = [
+        ("Upcoming", "upcoming"),
+        ("Ongoing", "ongoing"),
+        ("Passed", "passed"),
+    ]
+    
     id = models.AutoField(
         primary_key=True
+    )
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE
+    )
+
+    title = models.CharField(
+        max_length=255,
+        default="milestone title"
+    )
+
+    description = models.CharField(
+        max_length=255,
+        default="milestone description"
+    )
+
+    status = models.CharField(
+        max_length=255,
+        choices=STATUS_LIST,
+        default="Upcoming"
+    )
+
+    creation_date = models.DateField(
+        auto_now_add=True,
     )
