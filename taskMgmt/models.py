@@ -70,7 +70,8 @@ class Milestones(models.Model):
 
     task = models.ForeignKey(
         Task,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True    
     )
 
     title = models.CharField(
