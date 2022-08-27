@@ -16,6 +16,8 @@ from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updat
 from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap, updateTaskMapForUserAndCat
 from .serializers import FuncCategorySerializer
 
+from .cocomoii import *
+
 
 @api_view(["GET"])
 def getCategoryData(request, cat_id):
@@ -179,4 +181,82 @@ def updateUserTaskMap(request):
 
 @api_view(["POST"])
 def calculateCostAdvanced(request):
-    pass
+    data = request.data
+
+    # PREC
+    # FLEX
+    # RESL
+    # TEAM
+    # PMAT
+
+    # architectureRiskResolution - RESL 
+    # developmentFlexibility - FLEX 
+    # precedentedness - PREC 
+    # processMaturity - PMAT 
+    # teamCohesion - TEAM 
+
+    scale_factor_list = [
+        data["precedentedness"],
+        data["developmentFlexibility"],
+        data["architectureRiskResolution"],
+        data["teamCohesion"],
+        data["processMaturity"]
+    ]
+
+    # modifiedAssessmentAndAssimilation - 
+    # modifiedCodeModified - 
+    # modifiedDesignModifed - 
+    # modifiedIntegrationRequired - 
+    # modifiedSLOC - 
+    # modifiedSoftwareUnderstanding - 
+    # modifiedUnfamiliarity - 
+    # newSLOC - 
+    # reusedAssessmentAndAssimilation - 
+    # reusedIntegrationRequired - 
+    # reusedSLOC - 
+
+    # analystCapability - ACAP
+    # applicationExperience - APEX
+    # dataBaseSize - DATA 
+    # developedForReusability - RUSE
+    # documentationMatchToLifecycleNeeds - DOCU
+    # languageAndToolsetExperience - LTEX
+    # multisiteDevelopment - SITE
+    # personnelContinuity - PCON
+    # platformExperience - PLEX
+    # platformVolatility - PVOL
+    # productComplexity - CPLX
+    # programmerCapability - PCAP
+    # requiredDevelopmentSchedule - SCED
+    # requiredSoftwareReliability - RELY
+    # storageConstraint - STOR
+    # timeConstraint - TIME
+    # useOfSoftwareTools - TOOL
+
+    effortM_level_dict = {
+        "RELY_level": data["requiredSoftwareReliability"],
+        "DATA_level": data["dataBaseSize"],
+        "CPLX_level": data["productComplexity"],
+        "RUSE_level": data["developedForReusability"],
+        "DOCU_level": data["documentationMatchToLifecycleNeeds"],
+        "TIME_level": data["timeConstraint"],
+        "STOR_level": data["storageConstraint"],
+        "PVOL_level": data["platformVolatility"],
+        "ACAP_level": data["analystCapability"],
+        "PCAP_level": data["programmerCapability"],
+        "PCON_level": data["personnelContinuity"],
+        "APEX_level": data["applicationExperience"],
+        "PLEX_level": data["platformExperience"],
+        "LTEX_level": data["languageAndToolsetExperience"],
+        "TOOL_level": data["useOfSoftwareTools"],
+        "SITE_level": data["multisiteDevelopment"],
+        "SCED_level": data["requiredDevelopmentSchedule"]
+    }
+
+    SLOC = data["newSLOC"]
+
+    effort = calculateEffort(scale_factor_list, effortM_level_dict, SLOC)
+    time = calculateTime(effort=effort)
+    devCost = calculateDevCost
+
+    return Response({"success": True, "effort": effort, "time": time, "devCost": devCost}, status=status.HTTP_200_OK)
