@@ -15,6 +15,7 @@ urlpatterns = [
     path('deleteProject/<int:pk>/', views.DeleteProject.as_view() ), # use DELETE method
     path('addNotification/', views.NotificationHandler.as_view() ),
     path('getNotification/<int:receiver_id>/', views.NotificationHandler.as_view()),
+    path('getUserProjects/<int:user_id>/', views.getUserProjects ),
     # path('getProjectTreeStructure/<int:project_id>/', views.getProjectTreeStructure ), 
     
 ]

@@ -208,3 +208,16 @@ class NotificationHandler(APIView):
             data.append(d)
 
         return Response({"data": data}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getUserProjects(request, user_id):
+    all_project_map = User_Project_Map.objects.filter(user_id=user_id)
+    project_list = []
+    for project_map in all_project_map:
+        project = project_map.project_id
+
+        serializer = ProjectSerializer(project)
+        project_list.append(serializer.data)
+
+    return Response({"data":project_list}, status=status.HTTP_200_OK)
+
