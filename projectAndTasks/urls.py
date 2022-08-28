@@ -17,7 +17,9 @@ urlpatterns = [
     path('getNotification/<int:receiver_id>/', views.NotificationHandler.as_view()),
     path('getUserProjects/<int:user_id>/', views.getUserProjects ),
     path('getAllTasksCatalogue/', views.getAllTasksCatalogue),
+    path('getAllTasksCatalogueUser/<int:user_id>/', views.getAllTasksCatalogueUser),
     path('getAllProjectTaskCount/', views.getAllProjectTaskCount ),
+    path('getAllProjectTaskCountUser/<int:user_id>/', views.getAllProjectTaskCountUser ),
     path('setAttachments/', views.addStoredFiles ),
     # path('getProjectTreeStructure/<int:project_id>/', views.getProjectTreeStructure ), 
     

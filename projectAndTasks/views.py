@@ -14,7 +14,7 @@ from projectAndTasks.serializers import User_Project_Map_Serializer
 from .models import Notification, Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 from userMgmt.models import User
 from django.core.exceptions import ObjectDoesNotExist
-
+from taskMgmt.utils import getUserTaskListAll
 
 class ProjectHandler (
     APIView
@@ -258,6 +258,29 @@ def getAllTasksCatalogue(request):
 
     return Response({"catalogue": catalogue}, status=status.HTTP_200_OK)
 
+@api_view(["GET"])
+def getAllTasksCatalogueUser(request, user_id):
+    all_tasks = getUserTaskListAll(user_id)
+    catalogue = {
+        "Completed": 0,
+        "Ongoing": 0,
+        "Postponed": 0,
+        "Not Started": 0
+    }
+    for task in all_tasks:
+        if (task["status"] == "Completed"):
+            catalogue["Completed"] += 1
+        elif (task["status"] == "Ongoing"):
+            catalogue["Ongoing"] += 1
+
+        elif (task["status"] == "Postponed"):
+            catalogue["Postponed"] += 1
+
+        else:
+            catalogue["Not Started"] += 1
+
+    return Response({"catalogue": catalogue}, status=status.HTTP_200_OK)
+
 
 @api_view(["GET"])
 def getAllProjectTaskCount(request):
@@ -270,6 +293,27 @@ def getAllProjectTaskCount(request):
         data.append(
             {
                 "project_title": project["title"],
+                "task_count": task_count
+            }
+        )
+
+    return Response({"data": data}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def getAllProjectTaskCountUser(request, user_id):
+    all_projects = User_Project_Map.objects.filter(user_id_id = user_id).values()
+    # all_projects = Project.objects.all().values()
+    data = []
+    for project in all_projects:
+        print(project)
+        project_id = project["project_id_id"]
+        project_actual = Project.objects.filter(id=project_id).values().first()
+        task_count = Task.objects.filter(project_id=project_id).count()
+
+        data.append(
+            {
+                "project_title": project_actual["title"],
                 "task_count": task_count
             }
         )
