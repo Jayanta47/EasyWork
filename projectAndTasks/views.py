@@ -10,7 +10,6 @@ from rest_framework import generics
 
 from projectAndTasks.serializers import NotificationSerializer, ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
-from taskMgmt import serializers
 from .models import Notification, Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 from userMgmt.models import User
 from django.core.exceptions import ObjectDoesNotExist
