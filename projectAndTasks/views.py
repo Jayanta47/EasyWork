@@ -188,7 +188,10 @@ class NotificationHandler(APIView):
 
     def get(self, request, receiver_id):
         print(receiver_id)
-        all_notifications = Notification.objects.filter(sender__id=receiver_id)
+        all_notifications = Notification.objects.filter(receiver_id = receiver_id)
+        # all_notifications = Notification.objects.filter(receiver = receiver_id).values()
+        
+        print(all_notifications)
         data = []
         for notification in all_notifications:
             serializer = NotificationSerializer(notification)
