@@ -10,6 +10,7 @@ from rest_framework import status
 from rest_framework import generics
 
 from costEstimation.utils import cost_month_graph
+from projectAndTasks.models import Project
 # from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 
 from .models import FuncCategory
@@ -339,3 +340,18 @@ def getBudgetAndAllocation(request, project_id):
     total_budget, total_cost = calculateTotalCostAndBudgetOfProject(project_id)
 
     return Response({"total_estimation": total_cost, "total_allocation": total_budget}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def getAllProjectBudget(request):
+    all_project = Project.objects.all().values("id")
+    all_cost = 0
+    all_allocation = 0
+    for project in all_project:
+        project_id = project["id"]
+        total_budget, total_cost = calculateTotalCostAndBudgetOfProject(project_id)
+        all_cost += total_cost
+        all_allocation += total_budget
+
+    return Response({"all_estimation": all_cost, "all_allocation": all_allocation}, status=status.HTTP_200_OK)
+

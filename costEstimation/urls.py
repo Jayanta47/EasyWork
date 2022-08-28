@@ -14,6 +14,7 @@ urlpatterns = [
     path('updateUserTaskMap/', views.updateUserTaskMap ),
     path('calculateCostAdvanced/', views.calculateCostAdvanced ),
     path('calculateCost/', views.calculateCost ),
-    path('getBudgetAndAllocation/<int:project_id>/', views.getBudgetAndAllocation ),
+    path('getBudgetAndAllocation/<int:project_id>/', views.getBudgetAndAllocation ), 
+    path('getAllProjectBudget/', views.getAllProjectBudget ),
 
 ]

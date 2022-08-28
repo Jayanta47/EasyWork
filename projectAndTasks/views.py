@@ -257,5 +257,21 @@ def getAllTasksCatalogue(request):
     return Response({"catalogue": catalogue}, status=status.HTTP_200_OK)
 
 
+@api_view(["GET"])
+def getAllProjectTaskCount(request):
+    all_projects = Project.objects.all().values()
+    data = []
+    for project in all_projects:
+        project_id = project["id"]
+        task_count = Task.objects.filter(project_id = project_id).count()
+
+        data.append(
+            {
+                "project_title": project["title"],
+                "task_count": task_count
+            }
+        )
+
+    return Response({"data": data}, status=status.HTTP_200_OK)
 
 
