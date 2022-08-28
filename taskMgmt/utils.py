@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, date
 from math import inf
 from costEstimation.models import FuncCategory
+from costEstimation.serializers import FuncCategorySerializer
 from projectAndTasks.models import Project, Task, TaskHierarchy, User_Project_Map, Project_Category_Map
-from projectAndTasks.serializers import TaskSerializer
-from taskMgmt.models import Dependency, User_Task_Map
+from projectAndTasks.serializers import ProjectSerializer, TaskSerializer
+from taskMgmt.models import Dependency, User_Task_Map, Milestones
 from userMgmt.models import User, Designation
 from costEstimation.models import FuncCategory
 
@@ -25,6 +26,11 @@ def getTasksList(project_id):
     for task in tasks:
         # print(task)
         parent_task = TaskHierarchy.objects.filter(sub_task_id=task['id'])
+        milestone = Milestones.objects.filter(task=task['id']).values()
+        if len(milestone) > 0:
+            milestone = True
+        else:
+            milestone = False
         parent_task_id = 0
         if parent_task.count() == 1:
             parent_task = parent_task.values()[0]
@@ -41,7 +47,8 @@ def getTasksList(project_id):
             'end': task['end_time'],
             'slack_time': task['slack_time'],
             'category_id': task['category_id_id'],
-            'status': task['status']
+            'status': task['status'],
+            'milestone': milestone
         }
         task_list.append(t)
     return task_list
@@ -583,6 +590,24 @@ def updateTaskMapForUserAndCat(category_id, user_id, effort, wage):
 
 def getDependencyOfTask(task_id):
     return Dependency.objects.filter(parent_task__id=task_id).count()
+
+
+def calculateTotalCostAndBudgetOfProject(project_id):
+    all_func_categories_map = Project_Category_Map.objects.filter(project_id = project_id)
+
+    total_cost = 0
+    total_budget = 0
+    for func_category_map in all_func_categories_map:
+        category = func_category_map.category
+
+        serializer = FuncCategorySerializer(category)
+        total_cost += (serializer.data["estimated_cost"] + serializer.data["  misc_cost"])
+        total_budget += (serializer.data["allocated_budget"])
+
+    return total_budget, total_cost
+
+
+
 # error in implementation
 
 

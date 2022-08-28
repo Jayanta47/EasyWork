@@ -10,7 +10,6 @@ from rest_framework import generics
 
 from projectAndTasks.serializers import NotificationSerializer, ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
-from taskMgmt import serializers
 from .models import Notification, Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 from userMgmt.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -89,7 +88,7 @@ class TaskCommentHandler(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"success": True}, status=status.HTTP_201_CREATED)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def get(self, request, task_id, *args, **kwargs):
@@ -108,10 +107,12 @@ def getCommentOnTask(request):
     for comment in comments:
         comment = TaskCommentSerializer(comment)
         user_id = comment.data['user']
-        user_name = User.objects.filter(id=user_id).values('first_name', 'last_name').first()
+        user_name = User.objects.filter(id=user_id).values(
+            'first_name', 'last_name').first()
         # print(user_name)
         comment.data['user_name'] = user_name
-        comments_list.append({"comment": comment.data, "user": user_name["first_name"]+" "+ user_name["last_name"]})
+        comments_list.append(
+            {"comment": comment.data, "user": user_name["first_name"]+" " + user_name["last_name"]})
 
     return Response({"success": True, "comments_list": comments_list},
                     status=status.HTTP_200_OK)
@@ -156,19 +157,19 @@ class UpdateTask(generics.UpdateAPIView):
 
 #     current_level = []
 #     depth = 1
-#     isEnd = False 
+#     isEnd = False
 
 #     for task in all_tasks_in_project:
 #         if TaskHierarchy.objects.filter(sub_task_id_id = task["id"]).count() == 0:
 #             current_level.append(task)
-    
 
-    
+
 #     return Response({"success": True}, status=status.HTTP_200_OK)
 
 class UpdateProject(generics.UpdateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
 
 class DeleteProject(generics.DestroyAPIView):
     queryset = Project.objects.all()
@@ -194,7 +195,8 @@ class NotificationHandler(APIView):
         data = []
         for notification in all_notifications:
             serializer = NotificationSerializer(notification)
-            task = Task.objects.filter(id = serializer.data['task']).values().first()
+            task = Task.objects.filter(
+                id=serializer.data['task']).values().first()
             sender = User.objects.get(id=serializer.data["sender"])
             project = Project.objects.filter(id=task["id"]).values().first()
             d = {
@@ -211,3 +213,49 @@ class NotificationHandler(APIView):
             data.append(d)
 
         return Response({"data": data}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def getUserProjects(request, user_id):
+    all_project_map = User_Project_Map.objects.filter(user_id=user_id)
+    project_list = []
+    for project_map in all_project_map:
+        project = project_map.project_id
+
+        serializer = ProjectSerializer(project)
+        project_list.append(serializer.data)
+
+    return Response({"data": project_list}, status=status.HTTP_200_OK)
+
+
+# ("Completed", "completed"),
+# ("Ongoing", "ongoing"),
+# ("Postponed", "postponed"),
+# ("Not Started", "not started"),
+
+@api_view(["GET"])
+def getAllTasksCatalogue(request):
+    all_tasks = Task.objects.all().values()
+    catalogue = {
+        "Completed": 0,
+        "Ongoing": 0,
+        "Postponed": 0,
+        "Not Started": 0
+    }
+    for task in all_tasks:
+        if (task["status"] == "Completed"):
+            catalogue["Completed"] += 1
+        elif (task["status"] == "Ongoing"):
+            catalogue["Ongoing"] += 1
+
+        elif (task["status"] == "Postponed"):
+            catalogue["Postponed"] += 1
+
+        else:
+            catalogue["Not Started"] += 1
+
+    return Response({"catalogue": catalogue}, status=status.HTTP_200_OK)
+
+
+
+

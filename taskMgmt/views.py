@@ -288,7 +288,9 @@ def getAllMilestonesOfProj(request, project_id):
 
         for milestone in all_milestones:
             serializer = MilestonesSerializer(milestone)
-
-            data.append(serializer.data)
+            task_id = serializer.data["task"]
+            task_name = Task.objects.filter(id=task_id).values("title").first()
+            task_name = task_name["title"]
+            data.append({"data": serializer.data, "task_name": task_name})
 
     return Response({"data": data}, status=status.HTTP_200_OK) 

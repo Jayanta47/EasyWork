@@ -15,7 +15,7 @@ from costEstimation.utils import cost_month_graph
 from .models import FuncCategory
 from taskMgmt.utils import getAllMembersOfCategory, getAllTasksOfCategory, updateTaskFuncCategory, totalDaysInCategory
 from taskMgmt.utils import getCategoriesUnderProject, getUnCategorisedTasks, addProjectCategoryMap, updateTaskMapForUserAndCat
-from taskMgmt.utils import getAllMembersOfProject
+from taskMgmt.utils import getAllMembersOfProject, calculateTotalCostAndBudgetOfProject
 from .serializers import FuncCategorySerializer
 from costEstimation.utils import estimateEffort
 
@@ -334,6 +334,8 @@ def calculateCost(request):
         return Response({"success": False}, status = status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(["GET"])
+def getBudgetAndAllocation(request, project_id):
+    total_budget, total_cost = calculateTotalCostAndBudgetOfProject(project_id)
 
-    
-
+    return Response({"total_estimation": total_cost, "total_allocation": total_budget}, status=status.HTTP_200_OK)
