@@ -204,14 +204,16 @@ def getDependencyGraph(request):
         "pr": predecessor_list,
         "du": duration_list
     }
-    img_name = generateDependencyGraph(ancestry)
+    img_name, atts = generateDependencyGraph(ancestry)
+    # print(atts)
     maplist = []
     for key, value in map.items():
         maplist.append(value)
     data = {
         "task_map": maplist,
         "image_name": img_name,
-        "title": title
+        "title": title,
+        "atts": atts
     }
 
     return Response({"success": True, "data": data}, status=status.HTTP_200_OK)

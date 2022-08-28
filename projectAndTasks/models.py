@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from userMgmt.models import Designation, User
 from costEstimation.models import FuncCategory
@@ -226,5 +227,20 @@ class Notification (models.Model):
 
     notification_time = models.DateTimeField(
         auto_now_add=True 
+    )
+
+
+class StoredFiles(models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE
+    )
+
+    file_url = models.URLField(
+        max_length=500
     )
 

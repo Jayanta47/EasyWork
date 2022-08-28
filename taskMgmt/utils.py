@@ -547,7 +547,7 @@ def generateDependencyGraph(ancestry):
     fig_name = "fig_"+generateRandomString(10)+".png"
     plt.savefig(MEDIA_ROOT+"/"+ fig_name)
 
-    return fig_name
+    return fig_name, atts
 
 
 
