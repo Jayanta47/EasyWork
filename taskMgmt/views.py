@@ -100,7 +100,7 @@ def getSubTasks(request):
 @api_view(["POST"])
 def getTaskDetails(request):
     task_id = request.data['task_id']
-    print(task_id)
+    # print(task_id)
     task_info = getTaskDetailsDict(task_id)
     return Response({"success": True, "task_info": task_info}, status=status.HTTP_200_OK)
 

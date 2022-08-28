@@ -1,3 +1,4 @@
+from ast import Return
 from django.shortcuts import render
 
 # Create your views here.
@@ -8,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
 
-from projectAndTasks.serializers import NotificationSerializer, ProjectSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
+from projectAndTasks.serializers import NotificationSerializer, ProjectSerializer, StoredFilesSerializer, TaskCommentSerializer, TaskHierarchySerializer, TaskSerializer
 from projectAndTasks.serializers import User_Project_Map_Serializer
 from .models import Notification, Project, Task, TaskComments, TaskHierarchy, User_Project_Map
 from userMgmt.models import User
@@ -188,9 +189,10 @@ class NotificationHandler(APIView):
 
     def get(self, request, receiver_id):
         print(receiver_id)
-        all_notifications = Notification.objects.filter(receiver_id = receiver_id)
+        all_notifications = Notification.objects.filter(
+            receiver_id=receiver_id)
         # all_notifications = Notification.objects.filter(receiver = receiver_id).values()
-        
+
         print(all_notifications)
         data = []
         for notification in all_notifications:
@@ -263,7 +265,7 @@ def getAllProjectTaskCount(request):
     data = []
     for project in all_projects:
         project_id = project["id"]
-        task_count = Task.objects.filter(project_id = project_id).count()
+        task_count = Task.objects.filter(project_id=project_id).count()
 
         data.append(
             {
@@ -275,3 +277,26 @@ def getAllProjectTaskCount(request):
     return Response({"data": data}, status=status.HTTP_200_OK)
 
 
+@api_view(["POST"])
+def addStoredFiles(request):
+    data = request.data
+
+    task_id = data["task_id"]
+    attachment_list = data["attachments"]
+
+    for attachment in attachment_list:
+        file_data = {
+            "task": task_id,
+            "file_name": attachment["name"],
+            "file_url": attachment["url"]
+        }
+        print(file_data)
+        serializer = StoredFilesSerializer(data=file_data)
+
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            print(serializer.data)
+            return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"success": True}, status=status.HTTP_200_OK)

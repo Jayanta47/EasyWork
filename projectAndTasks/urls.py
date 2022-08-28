@@ -18,6 +18,7 @@ urlpatterns = [
     path('getUserProjects/<int:user_id>/', views.getUserProjects ),
     path('getAllTasksCatalogue/', views.getAllTasksCatalogue),
     path('getAllProjectTaskCount/', views.getAllProjectTaskCount ),
+    path('setAttachments/', views.addStoredFiles ),
     # path('getProjectTreeStructure/<int:project_id>/', views.getProjectTreeStructure ), 
     
 ]

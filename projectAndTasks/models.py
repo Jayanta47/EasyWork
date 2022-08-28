@@ -240,6 +240,10 @@ class StoredFiles(models.Model):
         on_delete=models.CASCADE
     )
 
+    file_name = models.CharField(
+        max_length=500
+    )
+
     file_url = models.URLField(
         max_length=500
     )

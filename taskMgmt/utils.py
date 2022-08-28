@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 from math import inf
 from costEstimation.models import FuncCategory
 from costEstimation.serializers import FuncCategorySerializer
-from projectAndTasks.models import Project, Task, TaskHierarchy, User_Project_Map, Project_Category_Map
+from projectAndTasks.models import Project, StoredFiles, Task, TaskHierarchy, User_Project_Map, Project_Category_Map
 from projectAndTasks.serializers import ProjectSerializer, TaskSerializer
 from taskMgmt.models import Dependency, User_Task_Map, Milestones
 from userMgmt.models import User, Designation
@@ -133,6 +133,15 @@ def getSubTaskList(task_id):
 
 def getTaskDetailsDict(task_id):
     task_info = Task.objects.filter(id=task_id).values()[0]
+    attachments = StoredFiles.objects.filter(task_id = task_id).values()
+
+    attachment_list = []
+    for att in attachments:
+        attachment_list.append({
+            "name": att["file_name"],
+            "url": att["file_url"]
+        })
+    
     task_dict = {
         'id': task_info['id'],
         'title': task_info['title'],
@@ -143,7 +152,8 @@ def getTaskDetailsDict(task_id):
         'end': task_info['end_time'],
         'slack_time': task_info['slack_time'],
         'category_id': task_info['category_id_id'],
-        'status': task_info['status']
+        'status': task_info['status'],
+        'attachments': attachment_list
     }
     return task_dict
 

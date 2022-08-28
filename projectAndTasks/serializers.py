@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 
-from projectAndTasks.models import Notification, Project, TaskComments, User_Project_Map, Task, TaskHierarchy
+from projectAndTasks.models import Notification, Project, StoredFiles, TaskComments, User_Project_Map, Task, TaskHierarchy
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,5 +81,11 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
+        fields = '__all__'
+
+
+class StoredFilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoredFiles
         fields = '__all__'
 
